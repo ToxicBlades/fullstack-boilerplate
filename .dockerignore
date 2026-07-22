@@ -1,0 +1,28 @@
+# Shared monorepo Docker context (mobile-web, back, migrate).
+# Build context is repo root — see docker-compose.yaml `context: .`.
+
+**/.DS_Store
+**/.git
+**/.gitignore
+
+**/node_modules
+
+# Secrets / local env (build uses Dockerfile ARG/ENV or runtime entrypoint)
+**/.env
+**/.env.local
+**/.env.*.local
+
+# Editor, tooling, and agent artifacts
+.cursor
+.vscode
+.gstack
+.impeccable
+.artifacts
+graphify-out
+**/graphify-out
+
+# Jest / coverage (not used by webpack production build)
+**/__tests__
+**/__mocks__
+**/*.test.ts
+**/*.test.tsx

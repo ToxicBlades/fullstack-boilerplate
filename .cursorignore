@@ -1,0 +1,20 @@
+# docker
+.env
+certificates
+docker/docker-exports
+local/docker
+
+# compiled output
+.next
+dist
+tmp
+out-tsc
+
+# dependencies
+.artifacts
+.pnpm-store
+
+.vscode
+
+playwright
+test-results

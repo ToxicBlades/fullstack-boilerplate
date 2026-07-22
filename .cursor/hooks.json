@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "afterFileEdit": [
+      {
+        "command": "pnpm fix --skip=correctness/noUnusedImports"
+      }
+    ],
+    "postToolUse": [
+      {
+        "command": "node .cursor/hooks/react-doctor.mjs",
+        "matcher": "Write|Edit|MultiEdit|ApplyPatch",
+        "timeout": 120
+      }
+    ]
+  },
+  "version": 1
+}

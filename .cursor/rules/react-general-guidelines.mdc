@@ -1,0 +1,150 @@
+---
+description: React general guidelines for project
+alwaysApply: false
+globs: ["**/*.tsx"]
+---
+# React Guidelines
+
+## Core Rules
+
+* **Functional components only**
+* **Named exports only**
+* **Event handlers over useEffect** for state updates
+* **Use shadcn components without redundant local state** when they already manage visibility or interactions internally
+
+## Forms
+
+* **Use shadcn Form** combined with **react-hook-form** and **zod** for any component that collects data or submits values
+* **Validation lives in zod schemas**
+* **Never build ad-hoc input state** when the form context can manage it
+
+### Example
+
+```typescript
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormField, FormItem, FormControl, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
+const schema = z.object({
+  email: z.string().email(),
+});
+
+export const EmailForm = ({ onSubmit }: { onSubmit: (v: { email: string }) => void }) => {
+  const form = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: { email: "" },
+  });
+
+  const handleSubmit = form.handleSubmit(values => onSubmit(values));
+
+  return (
+    <Form {...form}>
+      <form onSubmit={handleSubmit}>
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input placeholder="Email" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Send</Button>
+      </form>
+    </Form>
+  );
+};
+```
+
+## Component Structure
+
+```typescript
+export const UserProfile = ({ user, onEdit }: UserProfileProps) => {
+  const handleEdit = () => onEdit(user.id);
+
+  return (
+    <StyledContainer>
+      <h1>{user.name}</h1>
+      <Button onClick={handleEdit}>Edit</Button>
+    </StyledContainer>
+  );
+};
+```
+
+## Props & Event Handlers
+
+* Destructure props
+* Pass explicit handlers
+* Prefer inline event logic instead of effect-driven updates
+
+```typescript
+export const Button = ({ onClick, isDisabled, children }: ButtonProps) => (
+  <button onClick={onClick} disabled={isDisabled}>
+    {children}
+  </button>
+);
+```
+
+## shadcn Components
+
+* Dialog, DropdownMenu, Popover, Sheet and similar components **do not get extra useState** unless the design requires external control
+* Prefer using their built-in open or state primitives when available
+
+### Example
+
+```typescript
+export const UserMenu = () => (
+  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <Button>Menu</Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent>
+      <DropdownMenuItem>Profile</DropdownMenuItem>
+      <DropdownMenuItem>Logout</DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+);
+```
+
+## Component Design
+
+* Keep components small
+* Split UI and logic into clear layers
+* Extract reusable behavior into custom hooks
+
+```typescript
+export const UserCard = ({ user }: UserCardProps) => (
+  <StyledCard>
+    <UserAvatar user={user} />
+    <UserInfo user={user} />
+    <UserActions user={user} />
+  </StyledCard>
+);
+```
+
+## Performance
+
+* Use memo for genuinely heavy components
+* Memoize callbacks when reference stability matters
+
+```typescript
+export const UserList = ({ users, onUserSelect }: UserListProps) => {
+  const handleUserSelect = useCallback(
+    (user: User) => onUserSelect(user),
+    [onUserSelect]
+  );
+
+  return (
+    <div>
+      {users.map(user => (
+        <UserItem key={user.id} user={user} onSelect={handleUserSelect} />
+      ))}
+    </div>
+  );
+};

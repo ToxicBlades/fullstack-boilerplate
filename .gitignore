@@ -1,0 +1,67 @@
+# docker
+.env
+.rustfs/
+certificates
+
+# compiled output
+dist
+tmp
+out-tsc
+apps/back/admin-ui
+
+# dependencies
+node_modules
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+# System Files
+.DS_Store
+Thumbs.db
+
+.nx/cache
+.nx/workspace-data
+.cursor/rules/nx-rules.mdc
+.github/instructions/nx.instructions.md
+
+# Next.js
+.next
+next-env.d.ts
+
+# security
+credentials.json
+
+# python 
+__pycache__
+
+
+# iOS: Bundler vendored Ruby gems (CocoaPods); reinstall with pnpm pod-install
+apps/mobile/ios/vendor/bundle
+
+.pnpm-store
+docker/docker-exports
+graphify-out/cache
+.gstack/

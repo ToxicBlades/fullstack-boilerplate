@@ -1,0 +1,36 @@
+{
+  "name": "@project/source",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "e2e": "pnpm --filter @project/e2e test",
+    "e2e:ui": "pnpm --filter @project/e2e test:ui",
+    "e2e:install": "pnpm --filter @project/e2e install:browsers",
+    "lint": "ultracite fix",
+    "lint:fix": "ultracite fix --unsafe",
+    "clean:rabbit": "sh scripts/cleanup.sh",
+    "check": "ultracite check",
+    "fix": "ultracite fix",
+    "docker:export": "sh scripts/docker-export-images.sh --prod",
+    "docker:clear": "sh scripts/docker-clear.sh",
+    "docker:clear:build-cache": "sh scripts/docker-clear.sh --build-cache --yes",
+    "docker:rustfs:init": "sh scripts/rustfs-init.sh",
+    "docker:mailpit": "docker compose up -d mailpit",
+    "docker:mailpit:down": "docker compose stop mailpit",
+    "setup": "sh scripts/setup.sh",
+    "doctor": "npx react-doctor@latest"
+  },
+  "private": true,
+  "devDependencies": {
+    "@biomejs/biome": "2.4.9",
+    "react-doctor": "^0.4.2",
+    "ultracite": "7.4.2"
+  },
+  "workspaces": [
+    "apps/*",
+    "libs/*"
+  ],
+  "dependencies": {
+    "typescript": "^6.0.2"
+  }
+}

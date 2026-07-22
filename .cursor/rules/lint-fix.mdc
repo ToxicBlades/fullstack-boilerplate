@@ -1,0 +1,6 @@
+---
+description: Run lint fix after code edits
+alwaysApply: true
+---
+
+After modifying code files in this session, run `pnpm lint:fix` from the repository root before finishing the task. If issues remain, fix them and run again.

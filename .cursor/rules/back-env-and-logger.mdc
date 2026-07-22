@@ -1,0 +1,60 @@
+---
+description: Backend env config and Pino logger conventions (apps/back)
+globs: apps/back/**/*
+alwaysApply: false
+---
+
+# Backend: Environment & Logging
+
+Applies to `apps/back/`. Do not read `process.env` or use `console.*` for application logging in normal app code.
+
+## Environment variables
+
+Use the validated `env` object from `env-config.ts`, not raw `process.env`.
+
+```typescript
+// ✅ GOOD
+import { env } from "@/config/env-config";
+
+const port = env.BACK_PORT;
+if (env.AUTH_DEV_BYPASS) { /* ... */ }
+```
+
+```typescript
+// ❌ BAD — bypasses validation and typed defaults
+const port = process.env.BACK_PORT;
+const key = process.env.OPENAI_API_KEY ?? "";
+```
+
+**Adding a new variable:** declare it in `apps/back/src/config/env-config.ts` with the appropriate `envalid` validator (`str`, `num`, `bool`, `port`, etc.), document in `.env.example`, then read via `env.YOUR_VAR`.
+
+**Exceptions (only these):**
+
+- `env-config.ts` itself (defines `cleanEnv(process.env, …)`)
+- Test bootstrap (`src/__tests__/jest-setup.ts`) and integration test guards
+- One-off CLI scripts under `scripts/` when setting env before import or printing user-facing CLI output
+
+## Logging
+
+Use the shared Pino logger from `apps/back/src/logger.ts`.
+
+```typescript
+// ✅ GOOD
+import { logger } from "@/logger";
+
+logger.info({ userId }, "user created");
+logger.warn({ err }, "auth failed");
+logger.error({ err }, "transcription failed");
+```
+
+```typescript
+// ❌ BAD
+console.log("debug:", data);
+console.error(err);
+```
+
+**Scripts** (`apps/back/scripts/`): import `logger` from `../src/logger` (relative path). Prefer `logger` over `console` for operational messages; `console` is acceptable only for minimal CLI user prompts (e.g. usage text).
+
+**Third-party libraries** that accept a logger callback: use the shared Pino `logger` from `apps/back/src/logger.ts` via a small adapter if needed — not `console` or a new logger instance.
+
+**HTTP request logging:** use the existing `requestLogger` middleware in `server.ts` — do not add duplicate request log middleware.
