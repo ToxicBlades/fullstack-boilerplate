@@ -35,5 +35,13 @@ h1 em { color: var(--blue); font-family: Georgia, serif; font-size: .97em; font-
 .signal-label { position: absolute; color: var(--muted); font-size: 10px; letter-spacing: .1em; line-height: 1.5; text-transform: uppercase; }
 .signal-label-top { top: 1%; right: 11%; }.signal-label-bottom { bottom: 7%; left: 3%; }
 .manifesto { border-top: 1px solid var(--line); padding: 24px 0 70px; }.manifesto-text { display: flex; max-width: 650px; justify-content: space-between; gap: 30px; }.manifesto-text p { margin: 0; font-family: Georgia, serif; font-size: clamp(24px, 3vw, 42px); letter-spacing: -.04em; line-height: 1.08; }.manifesto-text strong { font-weight: 400; font-style: italic; }.manifesto-index { color: var(--blue); font-size: 11px; }.site-footer { margin-top: auto; padding-top: 20px; color: var(--muted); }
+.capabilities { display: grid; grid-template-columns: .8fr 1.2fr; gap: 9vw; border-top: 1px solid var(--line); padding: 30px 0 120px; }
+h2 { margin: 22px 0 0; font-size: clamp(37px, 5vw, 72px); font-weight: 400; letter-spacing: -.065em; line-height: .92; }
+h2 em { color: var(--blue); font-family: Georgia, serif; font-style: italic; font-weight: 400; }
+.capability-list { border-top: 1px solid var(--line); }
+.capability-row { display: grid; grid-template-columns: 40px 1fr 28px; gap: 20px; align-items: start; border-bottom: 1px solid var(--line); padding: 22px 0; }
+.row-number, .row-arrow { color: var(--blue); font-size: 11px; letter-spacing: .08em; }
+.row-arrow { font-size: 18px; text-align: right; }.capability-row h3 { margin: 0 0 7px; font-size: 17px; font-weight: 500; letter-spacing: -.02em; }.capability-row p { max-width: 390px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.closing-cta { border-top: 1px solid var(--line); padding: 30px 0 130px; }.closing-cta .primary-button { margin-top: 35px; }
 
-@media (max-width: 700px) { .landing-shell { padding: 20px 22px 18px; }.hero { display: flex; min-height: auto; flex-direction: column; align-items: flex-start; gap: 55px; padding: 75px 0 90px; }.signal { align-self: flex-end; width: min(72vw, 340px); }.manifesto { padding-bottom: 60px; }.site-footer { align-items: flex-start; flex-direction: column; gap: 8px; } }
+@media (max-width: 700px) { .landing-shell { padding: 20px 22px 18px; }.hero { display: flex; min-height: auto; flex-direction: column; align-items: flex-start; gap: 55px; padding: 75px 0 90px; }.signal { align-self: flex-end; width: min(72vw, 340px); }.manifesto { padding-bottom: 60px; }.capabilities { display: block; padding-bottom: 90px; }.capability-list { margin-top: 52px; }.closing-cta { padding-bottom: 100px; }.site-footer { align-items: flex-start; flex-direction: column; gap: 8px; } }

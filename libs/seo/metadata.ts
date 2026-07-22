@@ -7,15 +7,15 @@ type MetadataGenerator = Omit<Metadata, "description" | "title"> & {
   image?: string;
 };
 
-const applicationName = "parse-me";
+const applicationName = "Project";
 
-const publisher = "Parse Me";
+const publisher = "Project";
 const twitterHandle = "@project";
 const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
 const productionUrl = process.env.NEXT_PUBLIC_ROOT_DOMAIN;
 
 const author: Metadata["authors"] = {
-  name: "Parse Me",
+  name: "Project",
   url: productionUrl ? new URL(`${protocol}://${productionUrl}`) : undefined,
 };
 
