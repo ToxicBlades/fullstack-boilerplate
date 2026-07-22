@@ -41,7 +41,6 @@
     "@types/supertest": "^6.0.2",
     "ts-jest": "^29.3.4",
     "tsx": "^4.20.6",
-    "typescript": "^5",
     "tsup": "^8.5.0"
   }
 }

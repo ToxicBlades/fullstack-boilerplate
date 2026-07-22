@@ -1,4 +1,4 @@
-import { db } from "./knex.js";
+import { db } from "@/db/knex.js";
 
 try {
   await db.migrate.latest();

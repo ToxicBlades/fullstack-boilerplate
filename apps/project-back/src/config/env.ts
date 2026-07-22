@@ -11,7 +11,7 @@ export const env = cleanEnv(process.env, {
   CORS_ORIGINS: str({ default: "" }),
   DATABASE_URL: str({
     devDefault: testOnly(
-      "postgresql://postgres:postgres@localhost:5432/project_back"
+      "postgresql://postgres:postgres@localhost:5432/postgres"
     ),
   }),
   BETTER_AUTH_SECRET: str({

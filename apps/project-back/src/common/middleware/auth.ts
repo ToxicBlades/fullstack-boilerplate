@@ -1,11 +1,11 @@
 import { fromNodeHeaders } from "better-auth/node";
 import type { RequestHandler } from "express";
-import { auth } from "../../auth/auth.js";
-import { env } from "../../config/env.js";
+import { auth } from "@/auth/auth.js";
 import {
   getCachedAuthUser,
   setCachedAuthUser,
-} from "../cache/auth-session-cache.js";
+} from "@/common/cache/auth-session-cache.js";
+import { env } from "@/config/env.js";
 
 export const requireAuth: RequestHandler = async (req, res, next) => {
   try {

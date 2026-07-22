@@ -1,8 +1,13 @@
 import request from "supertest";
-import { db } from "../db/knex.js";
-import { app } from "../server.js";
+import { db } from "@/db/knex.js";
+import { app } from "@/server.js";
 
 describe("items CRUD", () => {
+  beforeAll(async () => {
+    await db.migrate.latest();
+    await db("items").del();
+  });
+
   afterAll(async () => {
     await db.destroy();
   });

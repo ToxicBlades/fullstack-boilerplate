@@ -1,7 +1,7 @@
-import { authPool } from "./auth/auth.js";
-import { env } from "./config/env.js";
-import { db } from "./db/knex.js";
-import { app, logger } from "./server.js";
+import { authPool } from "@/auth/auth.js";
+import { env } from "@/config/env.js";
+import { db } from "@/db/knex.js";
+import { app, logger } from "@/server.js";
 
 const server = app.listen(env.BACK_PORT, env.BACK_HOST, () => {
   logger.info(

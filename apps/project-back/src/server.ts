@@ -4,9 +4,9 @@ import express, { type Express } from "express";
 import helmet from "helmet";
 import pino from "pino";
 import pinoHttp from "pino-http";
-import { itemsRouter } from "./api/v1/items/items-router.js";
-import { auth } from "./auth/auth.js";
-import { env } from "./config/env.js";
+import { itemsRouter } from "@/api/v1/items/items-router.js";
+import { auth } from "@/auth/auth.js";
+import { env } from "@/config/env.js";
 
 export const logger = pino({
   level: env.NODE_ENV === "test" ? "silent" : "info",

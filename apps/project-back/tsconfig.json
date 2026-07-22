@@ -1,8 +1,11 @@
 {
-  "extends": "../../libs/typescript-config/base.json",
+  "extends": "@project/typescript-config/nextjs.json",
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": ".",
+    "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
+    "paths": { "@/*": ["src/*"] },
     "types": ["node", "jest"]
   },
   "include": ["src/**/*.ts", "migrations/**/*.ts", "knexfile.ts"]

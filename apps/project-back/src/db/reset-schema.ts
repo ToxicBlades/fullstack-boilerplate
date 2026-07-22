@@ -1,4 +1,4 @@
-import { db } from "./knex.js";
+import { db } from "@/db/knex.js";
 
 if (process.env.ALLOW_DB_NUKE !== "1") {
   throw new Error("Set ALLOW_DB_NUKE=1 to reset the schema");

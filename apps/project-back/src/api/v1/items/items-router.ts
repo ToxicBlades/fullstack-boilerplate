@@ -1,5 +1,5 @@
 import { Router, type Router as RouterType } from "express";
-import { db } from "../../db/knex.js";
+import { db } from "@/db/knex.js";
 
 export const itemsRouter: RouterType = Router();
 itemsRouter.get("/", async (_req, res, next) => {

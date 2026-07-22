@@ -6,6 +6,7 @@ module.exports = {
   extensionsToTreatAsEsm: [".ts"],
   roots: ["<rootDir>/src"],
   testMatch: ["**/*.test.ts"],
+  moduleNameMapper: { "^@/(.*)\\.js$": "<rootDir>/src/$1" },
   transform: {
     "^.+\\.tsx?$": [
       "ts-jest",

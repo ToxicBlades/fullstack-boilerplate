@@ -1,11 +1,11 @@
 import { createHash } from "node:crypto";
 import type { Request } from "express";
-import { env } from "../../config/env.js";
 import {
   shortTtlCacheDelete,
   shortTtlCacheGet,
   shortTtlCacheSet,
-} from "./short-ttl-cache.js";
+} from "@/common/cache/short-ttl-cache.js";
+import { env } from "@/config/env.js";
 
 export interface CachedAuthUser {
   email: string;
