@@ -18,7 +18,7 @@ function key(req: Request): string | null {
     ? `auth:${createHash("sha256").update(token).digest("hex")}`
     : null;
 }
-export async function getCachedAuthUser(req: Request) {
+export function getCachedAuthUser(req: Request) {
   const k = key(req);
   return k ? shortTtlCacheGet<CachedAuthUser>(k) : null;
 }
