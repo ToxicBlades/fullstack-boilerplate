@@ -65,3 +65,5 @@ apps/mobile/ios/vendor/bundle
 docker/docker-exports
 graphify-out/cache
 .gstack/
+
+apps/back

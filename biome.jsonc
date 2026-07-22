@@ -4,7 +4,9 @@
     "includes": [
       "!.artifacts",
       "!.cursor",
-      "!back/migrations",
+      "!.agents",
+      "!.vscode",
+      "!project-back/migrations",
       "!graphify-out",
       "!libs/design-system"
     ]

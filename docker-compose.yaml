@@ -1,0 +1,73 @@
+name: happy-home
+
+services:
+  db:
+    image: postgres:17.2
+    container_name: db
+    # expose:
+    #   - "5432"
+    ports:
+      - '5432:5432'
+    command: ["-c", "max_connections=500"]
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-postgres}
+      POSTGRES_DB: ${DATABASE_NAME:-postgres}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME:-postgres} -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: always
+    networks:
+      - my_net
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - my_net
+
+  migrate:
+    container_name: migrate
+    profiles: ["migrate"]
+    build:
+      context: .
+      dockerfile: ./apps/back/Dockerfile
+      target: migrator
+    image: back-migrate
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      # Required by env-config.ts (imported via knexfile / auth) even though migrate does not bind a port.
+      BACK_HOST: ${BACK_HOST:-0.0.0.0}
+      BACK_PORT: ${BACK_PORT:-3010}
+      BACK_COMMON_RATE_LIMIT_MAX_REQUESTS: ${BACK_COMMON_RATE_LIMIT_MAX_REQUESTS:-100}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://${DATABASE_USERNAME:-postgres}:${DATABASE_PASSWORD:-postgres}@db:5432/${DATABASE_NAME:-postgres}}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://localhost:3000}
+      USER_AI_KEYS_SECRET: ${USER_AI_KEYS_SECRET}
+      SEED_MODE: ${SEED_MODE:-demo}
+      SEED_SKIP: ${SEED_SKIP:-}
+    restart: "no"
+    networks:
+      - my_net
+
+volumes:
+  db-data:
+  pgadmin-data:
+
+networks:
+  my_net:
