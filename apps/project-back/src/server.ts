@@ -1,16 +1,14 @@
+import { logger } from "@project/logger";
 import { toNodeHandler } from "better-auth/node";
 import cors from "cors";
 import express, { type Express } from "express";
 import helmet from "helmet";
-import pino from "pino";
 import pinoHttp from "pino-http";
 import { itemsRouter } from "@/api/v1/items/items-router.js";
 import { auth } from "@/auth/auth.js";
 import { env } from "@/config/env.js";
 
-export const logger = pino({
-  level: env.NODE_ENV === "test" ? "silent" : "info",
-});
+export { logger };
 export const app: Express = express();
 
 const origins = env.CORS_ORIGINS.split(",")

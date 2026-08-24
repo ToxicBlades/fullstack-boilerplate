@@ -36,11 +36,11 @@ const key = process.env.OPENAI_API_KEY ?? "";
 
 ## Logging
 
-Use the shared Pino logger from `apps/back/src/logger.ts`.
+Use the shared Pino logger from `@project/logger`.
 
 ```typescript
 // ✅ GOOD
-import { logger } from "@/logger";
+import { logger } from "@project/logger";
 
 logger.info({ userId }, "user created");
 logger.warn({ err }, "auth failed");
@@ -53,8 +53,8 @@ console.log("debug:", data);
 console.error(err);
 ```
 
-**Scripts** (`apps/back/scripts/`): import `logger` from `../src/logger` (relative path). Prefer `logger` over `console` for operational messages; `console` is acceptable only for minimal CLI user prompts (e.g. usage text).
+**Scripts** (`apps/back/scripts/`): import `logger` from `@project/logger`. Prefer `logger` over `console` for operational messages; `console` is acceptable only for minimal CLI user prompts (e.g. usage text).
 
-**Third-party libraries** that accept a logger callback: use the shared Pino `logger` from `apps/back/src/logger.ts` via a small adapter if needed — not `console` or a new logger instance.
+**Third-party libraries** that accept a logger callback: use the shared Pino `logger` from `@project/logger` via a small adapter if needed — not `console` or a new logger instance.
 
 **HTTP request logging:** use the existing `requestLogger` middleware in `server.ts` — do not add duplicate request log middleware.

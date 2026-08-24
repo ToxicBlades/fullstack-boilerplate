@@ -1,0 +1,18 @@
+{
+  "extends": "@project/typescript-config/nextjs.json",
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@project/*": ["../*"],
+      "@project/logger/*": ["./*"]
+    },
+    "strictNullChecks": true,
+    "types": ["node"]
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
+}
