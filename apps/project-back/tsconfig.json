@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": ".",
-    "paths": { "@/*": ["src/*"] },
+    "paths": { "@/*": ["./src/*"] },
     "types": ["node", "jest"]
   },
   "include": ["src/**/*.ts", "migrations/**/*.ts", "knexfile.ts"]
