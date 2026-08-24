@@ -1,7 +1,6 @@
 {
   "extends": "@project/typescript-config/nextjs.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "plugins": [
       {
         "name": "next"
@@ -11,7 +10,8 @@
       "@project/*": ["../*"],
       "@project/email/*": ["./*"]
     },
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "types": ["node"]
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
