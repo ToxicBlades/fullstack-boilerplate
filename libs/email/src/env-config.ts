@@ -21,7 +21,7 @@ export const envEmail = cleanEnv(processEnv, {
   SMTP_USER: NotEmptyStringValidator({ devDefault: testOnly("mailpit-user") }),
   SMTP_PASS: NotEmptyStringValidator({ devDefault: testOnly("mailpit-pass") }),
   SMTP_FROM: NotEmptyStringValidator({
-    devDefault: testOnly("Tetis <noreply@tetis.app>"),
+    devDefault: testOnly("Company <noreply@company.app>"),
   }),
   SMTP_SECURE: bool({ default: false }),
   EMAIL_SMTP_VERIFY_ENABLED: bool({ default: false }),
