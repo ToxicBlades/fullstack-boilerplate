@@ -4,6 +4,8 @@ packages:
   - '!apps/back'
 
 allowBuilds:
+  '@swc/core': false
+  core-js: false
   esbuild: false
   msgpackr-extract: false
   sharp: false
