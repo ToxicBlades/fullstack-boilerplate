@@ -1,6 +1,6 @@
-export type LogDestination = {
+export interface LogDestination {
   write: (msg: string) => unknown;
-};
+}
 
 export type LogRouter = LogDestination & {
   add: (destination: LogDestination) => void;
