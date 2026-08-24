@@ -58,9 +58,6 @@ services:
       DATABASE_URL: ${DATABASE_URL:-postgresql://${DATABASE_USERNAME:-postgres}:${DATABASE_PASSWORD:-postgres}@db:5432/${DATABASE_NAME:-postgres}}
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
       BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://localhost:3000}
-      USER_AI_KEYS_SECRET: ${USER_AI_KEYS_SECRET}
-      SEED_MODE: ${SEED_MODE:-demo}
-      SEED_SKIP: ${SEED_SKIP:-}
     restart: "no"
     networks:
       - my_net
