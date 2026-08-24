@@ -1,4 +1,8 @@
 import { logger } from "@project/logger";
+
+/** biome-ignore lint/performance/noBarrelFile: logger is setuped here */
+export { logger } from "@project/logger";
+
 import { toNodeHandler } from "better-auth/node";
 import cors from "cors";
 import express, { type Express } from "express";
@@ -8,7 +12,6 @@ import { itemsRouter } from "@/api/v1/items/items-router.js";
 import { auth } from "@/auth/auth.js";
 import { env } from "@/config/env.js";
 
-export { logger };
 export const app: Express = express();
 
 const origins = env.CORS_ORIGINS.split(",")
