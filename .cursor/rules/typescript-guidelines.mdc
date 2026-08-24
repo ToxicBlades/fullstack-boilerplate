@@ -30,22 +30,21 @@ project enforces strict TypeScript usage to ensure type safety and maintainable 
 ### Type Definitions
 
 #### Types over Interfaces
-- Use `type` for all type definitions
-- Exception: When extending third-party interfaces
+- Use `interface` for all type definitions
   ```typescript
   // ✅ Correct
-  type User = {
-    id: string;
-    name: string;
-    email: string;
-  };
-
-  // ❌ Incorrect
   interface User {
     id: string;
     name: string;
     email: string;
   }
+
+  // ❌ Incorrect
+  type User = {
+    id: string;
+    name: string;
+    email: string;
+  };
   ```
 
 ### String Literals over Enums
