@@ -8,6 +8,7 @@ import cors from "cors";
 import express, { type Express } from "express";
 import helmet from "helmet";
 import pinoHttp from "pino-http";
+import { storageRouter } from "@/api/storage/storage-router.js";
 import { itemsRouter } from "@/api/v1/items/items-router.js";
 import { auth } from "@/auth/auth.js";
 import { env } from "@/config/env.js";
@@ -29,5 +30,6 @@ app.get("/api/hello", (_req, res) => {
   res.json({ message: "Hello from project-back" });
 });
 app.use("/api/items", itemsRouter);
+app.use("/api/storage", storageRouter);
 
 app.use((_req, res) => res.status(404).json({ error: "Not found" }));

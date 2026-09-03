@@ -1,4 +1,4 @@
-name: happy-home
+name: projects
 
 services:
   db:
@@ -76,9 +76,85 @@ services:
     restart: unless-stopped
     networks:
       - my_net
+
+  rustfs-perms:
+    image: alpine:3.20
+    user: root
+    volumes:
+      - rustfs-data:/data
+    command: ["sh", "-c", "chown -R 10001:10001 /data"]
+    networks:
+      - my_net
+    restart: "no"
+
+  rustfs:
+    image: rustfs/rustfs:latest
+    container_name: rustfs
+    security_opt:
+      - "no-new-privileges:true"
+    ports:
+      - "${RUSTFS_PORT:-9000}:9000"
+      - "${RUSTFS_CONSOLE_PORT:-9001}:9001"
+    volumes:
+      - rustfs-data:/data
+    environment:
+      RUSTFS_ADDRESS: 0.0.0.0:9000
+      RUSTFS_CONSOLE_ADDRESS: 0.0.0.0:9001
+      RUSTFS_CONSOLE_ENABLE: "true"
+      RUSTFS_CORS_ALLOWED_ORIGINS: "*"
+      RUSTFS_CONSOLE_CORS_ALLOWED_ORIGINS: "*"
+      RUSTFS_ACCESS_KEY: ${RUSTFS_ACCESS_KEY:-rustfsadmin}
+      RUSTFS_SECRET_KEY: ${RUSTFS_SECRET_KEY:-rustfsadmin}
+    command: ["/data"]
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "sh",
+          "-c",
+          "curl -fsS http://127.0.0.1:9000/health && curl -fsS http://127.0.0.1:9001/rustfs/console/health",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    depends_on:
+      rustfs-perms:
+        condition: service_completed_successfully
+    restart: always
+    networks:
+      - my_net
+
+  rustfs-init:
+    profiles: ["rustfs-init"]
+    image: minio/mc:latest
+    entrypoint: ["/bin/sh", "/init.sh"]
+    volumes:
+      - ./rustfs/init.sh:/init.sh:ro
+      - ./.rustfs:/rustfs-out
+    environment:
+      RUSTFS_ENDPOINT: http://rustfs:9000
+      RUSTFS_ACCESS_KEY: ${RUSTFS_ACCESS_KEY:-rustfsadmin}
+      RUSTFS_SECRET_KEY: ${RUSTFS_SECRET_KEY:-rustfsadmin}
+      RUSTFS_ADMIN_USER: ${RUSTFS_ADMIN_USER:-${RUSTFS_ACCESS_KEY:-rustfsadmin}}
+      RUSTFS_CREDS_FILE: /rustfs-out/credentials.env
+      RUSTFS_INIT_FORCE_REGEN: ${RUSTFS_INIT_FORCE_REGEN:-}
+      RUSTFS_INIT_SKIP_CREDS: ${RUSTFS_INIT_SKIP_CREDS:-}
+      AWS_REGION: ${AWS_REGION:-us-east-1}
+      S3_ENDPOINT: ${S3_ENDPOINT:-http://rustfs:9000}
+      S3_BUCKET: ${S3_BUCKET:-}
+      S3_RECIPES_BUCKET: ${S3_RECIPES_BUCKET:-}
+      S3_AVATARS_BUCKET: ${S3_AVATARS_BUCKET:-}
+    depends_on:
+      rustfs:
+        condition: service_healthy
+    restart: "no"
+    networks:
+      - my_net
+
 volumes:
   db-data:
-  pgadmin-data:
+  rustfs-data:
 
 networks:
   my_net:

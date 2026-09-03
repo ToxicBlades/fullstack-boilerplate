@@ -12,7 +12,8 @@
     "fix": "ultracite fix",
     "node_modules:clear": "sh scripts/clear-modules.sh",
     "setup": "sh scripts/setup.sh",
-    "doctor": "npx react-doctor@latest"
+    "doctor": "npx react-doctor@latest",
+    "docker:rustfs:init": "sh scripts/local-init-rustfs.sh"
   },
   "private": true,
   "devDependencies": {

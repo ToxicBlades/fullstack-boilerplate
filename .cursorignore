@@ -1,9 +1,5 @@
-# docker
-.env
-certificates
-docker/docker-exports
-local/docker
 
+.env
 # compiled output
 .next
 dist
@@ -11,10 +7,9 @@ tmp
 out-tsc
 
 # dependencies
-.artifacts
 .pnpm-store
 
+# local
 .vscode
-
 playwright
 test-results

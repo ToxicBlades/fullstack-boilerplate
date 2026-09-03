@@ -21,4 +21,10 @@ export const env = cleanEnv(process.env, {
   AUTH_SESSION_CACHE_TTL_MS: num({ default: 30_000 }),
   AUTH_SESSION_COOKIE_CACHE_MAX_AGE_SEC: num({ default: 300 }),
   AUTH_DEV_BYPASS: bool({ default: false }),
+  AWS_REGION: str({ default: "us-east-1" }),
+  AWS_ACCESS_KEY_ID: str({ default: "" }),
+  AWS_SECRET_ACCESS_KEY: str({ default: "" }),
+  S3_BUCKET: str({ default: "" }),
+  S3_ENDPOINT: str({ default: "" }),
+  S3_PUBLIC_BASE_URL: str({ default: "" }),
 });
