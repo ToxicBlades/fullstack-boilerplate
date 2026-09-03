@@ -9,7 +9,6 @@ export const BACK_API_ROUTES = {
     AI_PROVIDER_KEYS: "auth/me/ai-provider-keys",
   },
   DOCUMENTS: "documents",
-  GROUPS: "groups",
   ITEMS: "items",
   USERS: "users",
 };

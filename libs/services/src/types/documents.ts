@@ -8,7 +8,6 @@ export interface DocumentsCapabilities {
 
 export interface DocumentFolder {
   createdAt: string;
-  groupId: string;
   id: string;
   name: string;
   parentId: string | null;
@@ -27,7 +26,6 @@ export interface DocumentListItem {
   createdAt: string;
   expiresAt: string | null;
   folderId: string | null;
-  groupId: string;
   id: string;
   mimeType: string;
   sizeBytes: number;

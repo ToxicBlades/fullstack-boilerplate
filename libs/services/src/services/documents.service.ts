@@ -1,15 +1,10 @@
 import { BACK_API_ROUTES } from "../api-routes/back-api-routes";
 import type {
-  CreateDocumentFolderBody,
   DocumentDownloadUrl,
-  DocumentFolder,
   DocumentListItem,
-  DocumentsCapabilities,
   PatchDocumentBody,
-  PatchDocumentFolderBody,
   PresignUploadBody,
   PresignUploadResponse,
-  RecipeImageBrowseItem,
 } from "../types/documents";
 import BaseService, {
   type BaseRequestOptions,
@@ -21,92 +16,23 @@ import {
 } from "./common/response.service";
 
 class DocumentsService extends BaseService {
-  private base(groupId: string) {
-    return `${BACK_API_ROUTES.GROUPS}/${groupId}/${BACK_API_ROUTES.DOCUMENTS}`;
+  private base() {
+    return BACK_API_ROUTES.DOCUMENTS;
   }
 
-  private foldersBase(groupId: string) {
-    return `${this.base(groupId)}/folders`;
+  list(options?: BaseRequestOptions) {
+    return this.request<DocumentListItem[]>("GET", this.base(), options);
   }
 
-  listFolders(groupId: string, options?: BaseRequestOptions) {
-    return this.request<DocumentFolder[]>(
-      "GET",
-      this.foldersBase(groupId),
-      options
-    );
-  }
-
-  createFolder(
-    groupId: string,
-    body: CreateDocumentFolderBody,
-    options?: BaseRequestOptions
-  ) {
-    return this.request<DocumentFolder>("POST", this.foldersBase(groupId), {
-      ...options,
-      body,
-    });
-  }
-
-  patchFolder(
-    groupId: string,
-    folderId: string,
-    body: PatchDocumentFolderBody,
-    options?: BaseRequestOptions
-  ) {
-    return this.request<DocumentFolder>(
-      "PATCH",
-      `${this.foldersBase(groupId)}/${folderId}`,
-      { ...options, body }
-    );
-  }
-
-  deleteFolder(
-    groupId: string,
-    folderId: string,
-    options?: BaseRequestOptions
-  ) {
-    return this.request<{ id: string }>(
-      "DELETE",
-      `${this.foldersBase(groupId)}/${folderId}`,
-      options
-    );
-  }
-
-  capabilities(groupId: string, options?: BaseRequestOptions) {
-    return this.request<DocumentsCapabilities>(
-      "GET",
-      `${this.base(groupId)}/capabilities`,
-      options
-    );
-  }
-
-  list(groupId: string, options?: BaseRequestOptions) {
-    return this.request<DocumentListItem[]>("GET", this.base(groupId), options);
-  }
-
-  listRecipeImages(groupId: string, options?: BaseRequestOptions) {
-    return this.request<RecipeImageBrowseItem[]>(
-      "GET",
-      `${this.base(groupId)}/recipe-images`,
-      options
-    );
-  }
-
-  presign(
-    groupId: string,
-    body: PresignUploadBody,
-    options?: BaseRequestOptions
-  ) {
+  presign(body: PresignUploadBody, options?: BaseRequestOptions) {
     return this.request<PresignUploadResponse>(
       "POST",
-      `${this.base(groupId)}/presign`,
+      `${this.base()}/presign`,
       { ...options, body }
     );
   }
 
   async putContent(
-    groupId: string,
     documentId: string,
     body: BodyInit,
     mimeType: string,
@@ -114,7 +40,7 @@ class DocumentsService extends BaseService {
   ): Promise<StandardResponse<DocumentListItem>> {
     const response = await this.fetchWithAuth(
       "PUT",
-      `${this.base(groupId)}/${documentId}/content`,
+      `${this.base()}/${documentId}/content`,
       {
         ...options,
         body,
@@ -124,55 +50,46 @@ class DocumentsService extends BaseService {
     return handleResponse<DocumentListItem>(response);
   }
 
-  confirm(groupId: string, documentId: string, options?: BaseRequestOptions) {
+  confirm(documentId: string, options?: BaseRequestOptions) {
     return this.request<DocumentListItem>(
       "POST",
-      `${this.base(groupId)}/${documentId}/confirm`,
+      `${this.base()}/${documentId}/confirm`,
       options
     );
   }
 
   patch(
-    groupId: string,
     documentId: string,
     body: PatchDocumentBody,
     options?: BaseRequestOptions
   ) {
     return this.request<DocumentListItem>(
       "PATCH",
-      `${this.base(groupId)}/${documentId}`,
+      `${this.base()}/${documentId}`,
       { ...options, body }
     );
   }
 
-  remove(groupId: string, documentId: string, options?: BaseRequestOptions) {
+  remove(documentId: string, options?: BaseRequestOptions) {
     return this.request<{ id: string }>(
       "DELETE",
-      `${this.base(groupId)}/${documentId}`,
+      `${this.base()}/${documentId}`,
       options
     );
   }
 
-  downloadUrl(
-    groupId: string,
-    documentId: string,
-    options?: BaseRequestOptions
-  ) {
+  downloadUrl(documentId: string, options?: BaseRequestOptions) {
     return this.request<DocumentDownloadUrl>(
       "GET",
-      `${this.base(groupId)}/${documentId}/download-url`,
+      `${this.base()}/${documentId}/download-url`,
       options
     );
   }
 
-  fetchContent(
-    groupId: string,
-    documentId: string,
-    options?: RawRequestOptions
-  ) {
+  fetchContent(documentId: string, options?: RawRequestOptions) {
     return this.fetchWithAuth(
       "GET",
-      `${this.base(groupId)}/${documentId}/content`,
+      `${this.base()}/${documentId}/content`,
       options
     );
   }

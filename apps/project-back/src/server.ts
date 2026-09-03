@@ -9,6 +9,7 @@ import express, { type Express } from "express";
 import helmet from "helmet";
 import pinoHttp from "pino-http";
 import { storageRouter } from "@/api/storage/storage-router";
+import { documentsRouter } from "@/api/documents/documents-router";
 import { itemsRouter } from "@/api/v1/items/items-router";
 import { auth } from "@/auth/auth";
 import { env } from "@/config/env";
@@ -49,6 +50,7 @@ app.get("/api/hello", (_req, res) => {
   res.json({ message: "Hello from project-back" });
 });
 app.use("/api/items", itemsRouter);
+app.use("/api/documents", documentsRouter);
 app.use("/api/storage", storageRouter);
 
 app.use((_req, res) => res.status(404).json({ error: "Not found" }));
