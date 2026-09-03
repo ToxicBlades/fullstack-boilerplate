@@ -130,7 +130,7 @@ services:
     image: minio/mc:latest
     entrypoint: ["/bin/sh", "/init.sh"]
     volumes:
-      - ./rustfs/init.sh:/init.sh:ro
+      - ./docker/rustfs/init.sh:/init.sh:ro
       - ./.rustfs:/rustfs-out
     environment:
       RUSTFS_ENDPOINT: http://rustfs:9000
