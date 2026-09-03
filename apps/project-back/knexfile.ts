@@ -1,7 +1,7 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Knex } from "knex";
-import { env } from "./src/config/env.js";
+import { env } from "./src/config/env";
 
 const config: Knex.Config = {
   client: "pg",

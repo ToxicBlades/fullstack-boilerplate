@@ -7,7 +7,7 @@ import {
   isS3Configured,
   listObjects,
   putObject,
-} from "@/common/storage/s3.js";
+} from "@/common/storage/s3";
 
 export const storageService = {
   isConfigured: isS3Configured,

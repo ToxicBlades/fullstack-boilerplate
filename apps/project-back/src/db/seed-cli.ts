@@ -1,4 +1,4 @@
-import { db } from "@/db/knex.js";
+import { db } from "@/db/knex";
 
 try {
   if (process.argv.includes("--reset")) {

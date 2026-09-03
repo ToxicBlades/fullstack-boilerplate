@@ -7,7 +7,7 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { env } from "@/config/env.js";
+import { env } from "@/config/env";
 
 const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
 

@@ -1,5 +1,5 @@
 import express, { type Router } from "express";
-import { storageController } from "./storage-controller.js";
+import { storageController } from "./storage-controller";
 
 export const storageRouter: Router = express.Router();
 storageRouter.get("/health", storageController.health);

@@ -4,8 +4,8 @@ import {
   shortTtlCacheDelete,
   shortTtlCacheGet,
   shortTtlCacheSet,
-} from "@/common/cache/short-ttl-cache.js";
-import { env } from "@/config/env.js";
+} from "@/common/cache/short-ttl-cache";
+import { env } from "@/config/env";
 
 export interface CachedAuthUser {
   email: string;

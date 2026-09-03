@@ -1,6 +1,6 @@
 import request from "supertest";
-import { db } from "@/db/knex.js";
-import { app } from "@/server.js";
+import { db } from "@/db/knex";
+import { app } from "@/server";
 
 describe("items CRUD", () => {
   beforeAll(async () => {
@@ -11,6 +11,13 @@ describe("items CRUD", () => {
   afterAll(async () => {
     await db.destroy();
   });
+
+  it("rejects an empty item name", async () => {
+    const response = await request(app).post("/api/items").send({ name: " " });
+
+    expect(response.status).toBe(400);
+  });
+
   it("creates, reads, updates, and deletes an item", async () => {
     const created = await request(app)
       .post("/api/items")

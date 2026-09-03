@@ -1,5 +1,5 @@
 import express, { type Router } from "express";
-import { itemsController } from "./items-controller.js";
+import { itemsController } from "./items-controller";
 
 export const itemsRouter: Router = express.Router();
 itemsRouter.get("/", itemsController.list);

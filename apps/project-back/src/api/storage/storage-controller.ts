@@ -1,9 +1,6 @@
 import type { Request, RequestHandler } from "express";
-import {
-  ObjectKeyQuerySchema,
-  PresignUploadBodySchema,
-} from "./storage-model.js";
-import { storageService } from "./storage-service.js";
+import { ObjectKeyQuerySchema, PresignUploadBodySchema } from "./storage-model";
+import { storageService } from "./storage-service";
 
 function wildcardKey(req: Request): string {
   return String((req.params as Record<string, string>)["0"] ?? "");

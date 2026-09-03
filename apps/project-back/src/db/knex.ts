@@ -1,7 +1,7 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import knex from "knex";
-import { env } from "@/config/env.js";
+import { env } from "@/config/env";
 
 export const db = knex({
   client: "pg",

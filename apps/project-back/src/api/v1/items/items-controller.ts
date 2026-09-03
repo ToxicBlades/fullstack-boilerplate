@@ -3,8 +3,8 @@ import {
   CreateItemBodySchema,
   ItemIdParamsSchema,
   PatchItemBodySchema,
-} from "./items-model.js";
-import { itemsService } from "./items-service.js";
+} from "./items-model";
+import { itemsService } from "./items-service";
 
 class ItemsController {
   list: RequestHandler = async (_req, res, next) => {

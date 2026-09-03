@@ -1,5 +1,5 @@
-import { db } from "@/db/knex.js";
-import { ItemSelectColumns } from "./items-model.js";
+import { db } from "@/db/knex";
+import { ItemSelectColumns } from "./items-model";
 
 export const itemsService = {
   list() {
