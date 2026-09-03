@@ -1,4 +1,4 @@
-# This file contains open soure solutions which are easy to selfhost that might be usefull for product
+# This file contains open source solutions which are easy to selfhost that might be usefull for product
 
 ## Mobile
 
@@ -29,3 +29,9 @@ easy to selfhost with docker
 great for automatization process with logs without microservices
 
 https://github.com/n8n-io/n8n
+
+# Whisper
+
+docker whisper setup -> speech to text parsing
+
+https://github.com/hwdsl2/whisper-install
