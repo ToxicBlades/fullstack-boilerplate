@@ -12,8 +12,8 @@ const applicationName = "Project";
 const publisher = "Project";
 const twitterHandle = "@project";
 const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
-// actually its better just put here static value of real domain
-const productionUrl = process.env.NEXT_PUBLIC_ROOT_DOMAIN;
+// if project has 2 or more landings use here env value 
+const productionUrl = "your domain here";
 
 const author: Metadata["authors"] = {
   name: "Project",
