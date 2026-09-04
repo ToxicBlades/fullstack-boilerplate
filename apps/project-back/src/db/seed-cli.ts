@@ -1,6 +1,6 @@
-import { db } from "@/db/knex";
 import { auth, authPool } from "@/auth/auth";
 import { env } from "@/config/env";
+import { db } from "@/db/knex";
 
 try {
   if (process.argv.includes("--reset")) {

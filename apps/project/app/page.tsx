@@ -1,11 +1,11 @@
-import { redirect } from "next/navigation";
 import {
   authService,
   documentsService,
   itemsService,
 } from "@project/services/server";
-import { Dashboard } from "../modules/dashboard/component/dashboard";
+import { redirect } from "next/navigation";
 import { sessionOptions } from "../modules/auth/lib/session-options";
+import { Dashboard } from "../modules/dashboard/component/dashboard";
 
 export default async function Home() {
   const options = await sessionOptions();
@@ -15,7 +15,9 @@ export default async function Home() {
     documentsService.list(options),
   ]);
 
-  if (!session.success || !session.data) redirect("/auth");
+  if (!(session.success && session.data)) {
+    redirect("/auth");
+  }
 
   return (
     <Dashboard

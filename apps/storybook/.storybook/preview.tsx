@@ -19,7 +19,11 @@ const preview: Preview = {
       defaultTheme: "light",
     }),
     (Story) => (
-      <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="light"
+        enableSystem={false}
+      >
         <TooltipProvider>
           <div className="bg-background p-6 text-foreground antialiased">
             <Story />

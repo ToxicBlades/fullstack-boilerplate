@@ -1,8 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { signIn } from "../actions/auth";
-import type { LoginProperties } from "../types/login-properties";
 import { Button } from "@project/design-system/components/ui/button";
 import {
   Card,
@@ -13,6 +10,9 @@ import {
 } from "@project/design-system/components/ui/card";
 import { Input } from "@project/design-system/components/ui/input";
 import { Label } from "@project/design-system/components/ui/label";
+import { useState } from "react";
+import { signIn } from "../actions/auth";
+import type { LoginProperties } from "../types/login-properties";
 
 export function Login({ onLogin }: LoginProperties) {
   const [email, setEmail] = useState("");
@@ -25,8 +25,9 @@ export function Login({ onLogin }: LoginProperties) {
     setError(null);
     try {
       const result = await signIn(email, password);
-      if (!result.success || !result.data)
+      if (!(result.success && result.data)) {
         throw new Error(result.errorMessage ?? "Session could not be loaded.");
+      }
       onLogin(result.data);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Unable to sign in.");
@@ -36,9 +37,9 @@ export function Login({ onLogin }: LoginProperties) {
   }
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#f5f7fb] px-6 py-12">
-      <Card className="w-full max-w-md border-slate-200 shadow-xl shadow-slate-200/60">
+      <Card className="w-full max-w-md border-slate-200 shadow-slate-200/60 shadow-xl">
         <CardHeader className="gap-3 pb-4">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-950 text-lg font-semibold text-white">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-950 font-semibold text-lg text-white">
             A
           </div>
           <div>
@@ -54,26 +55,26 @@ export function Login({ onLogin }: LoginProperties) {
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
-                type="email"
-                required
-                value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="you@example.com"
+                required
+                type="email"
+                value={email}
               />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
-                type="password"
-                required
-                value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 placeholder="Your password"
+                required
+                type="password"
+                value={password}
               />
             </div>
             {error && (
-              <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+              <p className="rounded-md bg-red-50 px-3 py-2 text-red-700 text-sm">
                 {error}
               </p>
             )}

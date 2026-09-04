@@ -7,7 +7,9 @@ import {
 import { documentsService } from "./documents-service";
 
 function userId(req: Request) {
-  if (!req.user) throw new Error("Unauthorized");
+  if (!req.user) {
+    throw new Error("Unauthorized");
+  }
   return req.user.id;
 }
 

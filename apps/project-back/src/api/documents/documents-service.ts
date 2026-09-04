@@ -1,11 +1,11 @@
 import { randomUUID } from "node:crypto";
-import { db } from "@/db/knex";
 import {
   createDownloadUrl,
   createUploadUrl,
   deleteObject,
   isS3Configured,
 } from "@/common/storage/s3";
+import { db } from "@/db/knex";
 
 function toDocument(row: Record<string, unknown>) {
   return {
@@ -41,8 +41,9 @@ export const documentsService = {
       title: string;
     }
   ) {
-    if (!isS3Configured())
+    if (!isS3Configured()) {
       throw new Error("RustFS/S3 storage is not configured");
+    }
     const id = randomUUID();
     const filename = body.filename.replace(/[^a-zA-Z0-9._-]/g, "_");
     const storageKey = `${userId}/${id}-${filename}`;
@@ -68,7 +69,9 @@ export const documentsService = {
     const row = await db("documents")
       .where({ id, uploaded_by: userId })
       .first();
-    if (!row) return null;
+    if (!row) {
+      return null;
+    }
     await db("documents").where({ id }).update({ upload_confirmed: true });
     return toDocument({ ...row, upload_confirmed: true });
   },
@@ -77,7 +80,9 @@ export const documentsService = {
     const count = await db("documents")
       .where({ id, uploaded_by: userId })
       .update({ title });
-    if (!count) return null;
+    if (!count) {
+      return null;
+    }
     return toDocument(await db("documents").where({ id }).first());
   },
 
@@ -85,7 +90,9 @@ export const documentsService = {
     const row = await db("documents")
       .where({ id, uploaded_by: userId })
       .first();
-    if (!row) return false;
+    if (!row) {
+      return false;
+    }
     await deleteObject(row.storage_key);
     await db("documents").where({ id }).del();
     return true;
@@ -95,7 +102,9 @@ export const documentsService = {
     const row = await db("documents")
       .where({ id, uploaded_by: userId })
       .first();
-    if (!row) return null;
+    if (!row) {
+      return null;
+    }
     return {
       downloadUrl: await createDownloadUrl(row.storage_key),
       storage: "s3" as const,

@@ -1,7 +1,7 @@
 // This file has been automatically migrated to valid ESM format by Storybook.
 import { createRequire } from "node:module";
-import { fileURLToPath } from "node:url";
 import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import type { StorybookConfig } from "@storybook/nextjs-vite";
 
 const require = createRequire(import.meta.url);
@@ -15,13 +15,11 @@ const getAbsolutePath = (value: string) =>
 
 const designSystemPath = resolve(
   dirname(fileURLToPath(import.meta.url)),
-  "../../../libs/design-system",
+  "../../../libs/design-system"
 );
 
 const config: StorybookConfig = {
-  stories: [
-    "../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
-  ],
+  stories: ["../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
   addons: [
     getAbsolutePath("@chromatic-com/storybook"),
     getAbsolutePath("@storybook/addon-onboarding"),

@@ -1,8 +1,8 @@
 "use server";
 
-import { documentsService } from "@project/services/server";
 import type { DocumentListItem } from "@project/services";
 import type { StandardResponse } from "@project/services/server";
+import { documentsService } from "@project/services/server";
 import { sessionOptions } from "../../auth/lib/session-options";
 
 export async function renameDocument(id: string, title: string) {
@@ -25,24 +25,26 @@ export async function uploadDocument(
     },
     options
   );
-  if (!presign.success || !presign.data)
+  if (!(presign.success && presign.data)) {
     return {
       data: null,
       success: false,
       status: presign.status,
       errorMessage: presign.errorMessage ?? "Could not prepare upload.",
     };
+  }
   const upload = await fetch(presign.data.uploadUrl, {
     method: presign.data.method,
     headers: presign.data.headers,
     body: await file.arrayBuffer(),
   });
-  if (!upload.ok)
+  if (!upload.ok) {
     return {
       data: null,
       success: false,
       status: upload.status,
       errorMessage: "Upload failed.",
     };
+  }
   return documentsService.confirm(presign.data.documentId, options);
 }
