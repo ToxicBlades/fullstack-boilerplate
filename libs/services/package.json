@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "generate-index": "node --loader ts-node/esm scripts/generate-index.ts"
+    "generate-index": "tsx scripts/generate-index.ts"
   },
   "dependencies": {
     "dotenv": "^17.2.2",
