@@ -8,6 +8,7 @@ dist
 tmp
 out-tsc
 apps/back/admin-ui
+storybook-static
 
 # dependencies
 node_modules
@@ -65,5 +66,3 @@ apps/mobile/ios/vendor/bundle
 docker/docker-exports
 graphify-out/cache
 .gstack/
-
-apps/back

@@ -1,0 +1,20 @@
+{
+  "name": "@project/e2e",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "report": "playwright show-report",
+    "install:browsers": "playwright install chromium"
+  },
+  "devDependencies": {
+    "@project/typescript-config": "workspace:*",
+    "@playwright/test": "^1.53.2",
+    "@types/node": "^22.13.17",
+    "typescript": "^5.9.2"
+  }
+}

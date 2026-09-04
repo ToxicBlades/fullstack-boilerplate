@@ -1,14 +1,27 @@
 packages:
   - apps/*
   - libs/*
-  - '!apps/back'
-
+  - '!apps/back*'
+  - '!apps/*as copy*'
 allowBuilds:
   '@swc/core': false
   core-js: false
+  core-js-pure: false
   esbuild: false
   msgpackr-extract: false
   sharp: false
+
+minimumReleaseAgeExclude:
+  - '@chromatic-com/storybook@5.3.1'
+  - '@storybook/addon-onboarding@10.6.0'
+  - '@storybook/addon-themes@10.6.0'
+  - '@storybook/builder-vite@10.6.0'
+  - '@storybook/nextjs-vite@10.6.0'
+  - '@storybook/react-dom-shim@10.6.0'
+  - '@storybook/react-vite@10.6.0'
+  - '@storybook/react@10.6.0'
+  - storybook@10.6.0
+  - vite-plugin-storybook-nextjs@10.6.0
 
 overrides:
   better-call: 1.3.7
