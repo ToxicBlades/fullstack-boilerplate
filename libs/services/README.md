@@ -94,7 +94,7 @@ package. The package does not require a separate `libs/services/.env` file.
 
 | Variable | Required | Description | Development default |
 | --- | --- | --- | --- |
-| `BACK_API_BASE_URL` | In production | Base URL used by the server service clients | `http://localhost:3001/api` |
+| `BACK_API_BASE_URL` | In production | Base URL used by the server service clients | `http://localhost:3010/api` |
 | `NODE_ENV` | No | Controls production-aware validator behavior | Provided by the application |
 
 ## Available services

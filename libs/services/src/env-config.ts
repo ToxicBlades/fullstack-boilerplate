@@ -11,7 +11,7 @@ export const envShared = cleanEnv(
   { BACK_API_BASE_URL: process.env.BACK_API_BASE_URL },
   {
     BACK_API_BASE_URL: str({
-      devDefault: "http://localhost:3001/api",
+      devDefault: "http://localhost:3010/api",
     }),
   }
 );

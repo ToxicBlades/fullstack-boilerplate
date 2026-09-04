@@ -29,7 +29,7 @@ available at the development default:
 
 | Variable | Required | Description | Default |
 | --- | --- | --- | --- |
-| `BACK_API_BASE_URL` | No | Server-side base URL for the backend API | `http://localhost:3001/api` |
+| `BACK_API_BASE_URL` | No | Server-side base URL for the backend API | `http://localhost:3010/api` |
 
 Do not expose this value with a `NEXT_PUBLIC_` prefix: API calls are made by
 Server Components and Server Actions.

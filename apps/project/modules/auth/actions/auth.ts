@@ -4,7 +4,7 @@ import { authService } from "@project/services/server";
 import { cookies } from "next/headers";
 import { sessionOptions } from "../lib/session-options";
 
-const apiBase = process.env.BACK_API_BASE_URL ?? "http://localhost:3001/api";
+const apiBase = process.env.BACK_API_BASE_URL ?? "http://localhost:3010/api";
 
 function applyCookies(
   headers: string[],
