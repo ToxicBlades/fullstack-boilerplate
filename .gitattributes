@@ -1,0 +1,7 @@
+# Generated analysis and test-report artifacts are not project source code.
+/graphify-out/** linguist-generated=true
+/apps/e2e/playwright-report/** linguist-generated=true
+/apps/e2e/test-results/** linguist-generated=true
+
+# Bundled editor skills contain third-party helper scripts and datasets.
+/.cursor/skills/** linguist-vendored=true
