@@ -3,7 +3,6 @@ import { z } from "zod";
 export const ItemIdParamsSchema = z.object({ id: z.string().uuid() });
 
 export const CreateItemBodySchema = z.object({
-  id: z.string().uuid(),
   name: z.string().trim().min(1).max(255),
 });
 

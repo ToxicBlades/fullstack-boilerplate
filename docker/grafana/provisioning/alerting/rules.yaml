@@ -1,0 +1,76 @@
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: Project backend
+    folder: Project alerts
+    interval: 1m
+    rules:
+      - uid: project-back-errors
+        title: Project backend is logging errors
+        condition: C
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: loki
+            model:
+              datasource:
+                type: loki
+                uid: loki
+              editorMode: code
+              expr: 'sum(count_over_time({service="project-back"} | json | level >= 50 [5m]))'
+              intervalMs: 1000
+              maxDataPoints: 43200
+              queryType: range
+              refId: A
+          - refId: B
+            queryType: expression
+            relativeTimeRange:
+              from: 0
+              to: 0
+            datasourceUid: __expr__
+            model:
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            queryType: expression
+            relativeTimeRange:
+              from: 0
+              to: 0
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: [0]
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: [C]
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: B
+              refId: C
+              type: threshold
+        noDataState: OK
+        execErrState: Error
+        for: 1m
+        annotations:
+          description: The backend emitted one or more error-level logs in five minutes.
+          summary: Backend errors detected
+        labels:
+          severity: warning
+          service: project-back

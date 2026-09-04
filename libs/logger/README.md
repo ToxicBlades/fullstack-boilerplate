@@ -12,6 +12,7 @@ small router for sending each log entry to additional destinations.
 - JSON output in production, tests, and non-interactive environments
 - Named child loggers with contextual bindings
 - Multiple writable log destinations without replacing console output
+- Optional batched delivery directly to Loki's HTTP push API
 - Silent logging by default when `NODE_ENV=test`
 
 ## Installation
@@ -42,10 +43,16 @@ It does not load a separate `.env` file from `libs/logger`.
 | --- | --- | --- | --- |
 | `LOG_LEVEL` | No | Minimum Pino log level: `fatal`, `error`, `warn`, `info`, `debug`, `trace`, or `silent` | `info`, or `silent` in tests |
 | `LOG_NAME` | No | Name used by loggers created with `createLogger()` when no `name` option is supplied | `app` |
+| `LOKI_URL` | No | Loki base URL; when set, every shared log is also pushed to Loki | disabled |
+| `LOKI_BATCH_INTERVAL_MS` | No | Maximum delay before a buffered Loki batch is sent | `1000` |
+| `LOKI_MAX_BATCH_SIZE` | No | Number of entries that triggers an immediate Loki push | `100` |
+| `LOKI_MAX_QUEUE_SIZE` | No | Maximum buffered entries while Loki is unavailable | `10000` |
+| `LOKI_USERNAME` / `LOKI_PASSWORD` | No | Basic authentication credentials for a hosted Loki instance | empty |
+| `LOKI_TENANT_ID` | No | Value sent as Loki's `X-Scope-OrgID` header | empty |
 | `NODE_ENV` | No | Output mode: `development`, `production`, or `test` | `development` |
 
-The exported shared logger is explicitly named `main`. `LOG_NAME` applies to
-custom logger instances created without an explicit name.
+`LOG_NAME` names the exported shared logger and custom logger instances created
+without an explicit name. It is also used as the stable Loki `service` label.
 
 Environment values are validated when the package is imported. Invalid values
 cause startup to fail with a configuration error.
@@ -170,6 +177,7 @@ router.write("message\n");
 | `logger` | Shared Pino logger named `main` |
 | `createChildLogger(name, bindings?)` | Creates a child of the shared logger |
 | `addLogDestination(destination)` | Adds a destination to the shared logger |
+| `flushLogs()` | Flushes buffered asynchronous destinations during shutdown |
 | `createLogger(options?)` | Creates an independent logger and router |
 | `createLogRouter(destinations?)` | Creates a standalone writable fan-out router |
 | `Logger` | Re-exported Pino logger type |

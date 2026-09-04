@@ -6,6 +6,7 @@ import {
   type LogDestination,
   type LogRouter,
 } from "./log-router";
+import { createLokiDestination } from "./loki-destination";
 
 export type CreateLoggerOptions = LoggerOptions & {
   destinations?: LogDestination[];
@@ -29,7 +30,25 @@ export function createLogger(options: CreateLoggerOptions = {}): {
   router: LogRouter;
 } {
   const { destinations = [], ...pinoOptions } = options;
-  const router = createLogRouter([createConsoleDestination(), ...destinations]);
+  const defaultDestinations: LogDestination[] = [createConsoleDestination()];
+  if (envLogger.LOKI_URL) {
+    defaultDestinations.push(
+      createLokiDestination({
+        batchIntervalMs: envLogger.LOKI_BATCH_INTERVAL_MS,
+        labels: {
+          environment: envLogger.NODE_ENV,
+          service: pinoOptions.name ?? envLogger.LOG_NAME,
+        },
+        maxBatchSize: envLogger.LOKI_MAX_BATCH_SIZE,
+        maxQueueSize: envLogger.LOKI_MAX_QUEUE_SIZE,
+        password: envLogger.LOKI_PASSWORD,
+        tenantId: envLogger.LOKI_TENANT_ID,
+        url: envLogger.LOKI_URL,
+        username: envLogger.LOKI_USERNAME,
+      })
+    );
+  }
+  const router = createLogRouter([...defaultDestinations, ...destinations]);
 
   const logger = pino(
     {

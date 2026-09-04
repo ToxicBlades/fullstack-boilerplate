@@ -1,8 +1,11 @@
+// Load application environment variables before the shared logger is created.
+import "dotenv/config";
 import { logger } from "@project/logger";
 
 /** biome-ignore lint/performance/noBarrelFile: logger is setuped here */
 export { logger } from "@project/logger";
 
+import { metricsHandler, metricsMiddleware } from "@project/analytics";
 import { fromNodeHeaders, toNodeHandler } from "better-auth/node";
 import cors from "cors";
 import express, { type Express } from "express";
@@ -23,7 +26,26 @@ app.use(
   cors({ origin: origins.length > 0 ? origins : true, credentials: true })
 );
 app.use(helmet());
-app.use(pinoHttp({ logger }));
+app.use(
+  pinoHttp({
+    autoLogging: {
+      // Prometheus scrapes frequently and does not need one log entry per scrape.
+      ignore: (request) => request.url === "/metrics",
+    },
+    logger,
+    serializers: {
+      req: (request) => ({
+        id: request.id,
+        method: request.method,
+        remoteAddress: request.remoteAddress,
+        url: request.url,
+      }),
+      res: (response) => ({ statusCode: response.statusCode }),
+    },
+  })
+);
+app.get("/metrics", metricsHandler);
+app.use(metricsMiddleware);
 app.use(express.json());
 app.get("/api/auth/me", async (req, res) => {
   const session = await auth.api.getSession({

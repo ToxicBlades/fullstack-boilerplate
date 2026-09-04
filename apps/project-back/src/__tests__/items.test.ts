@@ -37,5 +37,13 @@ describe("items CRUD", () => {
       ).body.name
     ).toBe("Updated item");
     expect((await request(app).delete(`/api/items/${id}`)).status).toBe(204);
+
+    const metrics = await request(app).get("/metrics");
+    expect(metrics.text).toContain(
+      'app_analytics_events_total{event="item_created"} 1'
+    );
+    expect(metrics.text).toContain(
+      'app_analytics_events_total{event="item_deleted"} 1'
+    );
   });
 });

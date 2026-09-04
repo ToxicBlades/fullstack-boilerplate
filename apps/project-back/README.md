@@ -11,7 +11,7 @@ object storage.
 - Authenticated document metadata and upload workflows
 - Raw and presigned S3-compatible storage operations
 - PostgreSQL migrations and development seed data
-- Structured request and application logging
+- Structured request/application logging and Prometheus metrics
 
 ## Prerequisites
 
@@ -58,7 +58,8 @@ The main variables are:
 | `S3_PUBLIC_BASE_URL` | No | Stable public base URL for stored objects | Empty |
 
 Logger configuration is documented in `libs/logger/README.md`. Keep production
-secrets out of source control.
+secrets out of source control. The local Loki, Prometheus, Grafana, analytics,
+and alerting setup is documented in `docker/observability.md`.
 
 ## Database setup
 
@@ -105,6 +106,7 @@ endpoints automatically use path-style S3 requests.
 ## API overview
 
 - `GET /api/hello` - Health check
+- `GET /metrics` - Prometheus metrics
 - `/api/auth/*` - Better Auth endpoints
 - `GET /api/auth/me` - Current authenticated user
 - `GET|POST /api/items` and `PATCH|DELETE /api/items/:id` - Item CRUD
@@ -142,7 +144,8 @@ expect PostgreSQL to be available through `DATABASE_URL`.
 - Better Auth provides authentication and session management.
 - Knex and `pg` provide PostgreSQL migrations and access.
 - AWS SDK provides S3-compatible object storage.
-- `@project/logger` and `pino-http` provide structured logging.
+- `@project/logger`, `@project/analytics`, and `pino-http` provide logs,
+  analytics events, and Prometheus metrics.
 - Envalid and Zod validate environment values and API input.
 
 ## License

@@ -3,13 +3,14 @@ SHELL := /bin/sh
 COMPOSE := docker compose -f docker-compose.yaml
 BACKEND := pnpm --filter @project/back
 
-.PHONY: help setup dev-setup infra-up rustfs-init db-migrate down logs
+.PHONY: help setup dev-setup infra-up observability-up rustfs-init db-migrate down logs
 
 help:
 	@echo "Available targets:"
 	@echo "  make setup       Alias for make dev-setup"
 	@echo "  make dev-setup   Start local services, initialize RustFS, and run DB migrations"
 	@echo "  make infra-up    Start PostgreSQL, Redis, RustFS, and Mailpit"
+	@echo "  make observability-up Start Loki, Prometheus, and Grafana"
 	@echo "  make rustfs-init Initialize RustFS buckets and app credentials"
 	@echo "  make db-migrate  Run application and Better Auth migrations"
 	@echo "  make down        Stop local services"
@@ -22,6 +23,9 @@ dev-setup: infra-up rustfs-init db-migrate
 
 infra-up:
 	$(COMPOSE) up -d --wait db redis rustfs mailpit
+
+observability-up:
+	$(COMPOSE) up -d --wait loki prometheus grafana
 
 rustfs-init:
 	sh scripts/local-init-rustfs.sh

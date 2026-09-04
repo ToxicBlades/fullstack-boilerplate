@@ -1,3 +1,4 @@
+import { trackEvent } from "@project/analytics";
 import { db } from "@/db/knex";
 import { ItemSelectColumns } from "./items-model";
 
@@ -12,6 +13,7 @@ export const itemsService = {
     const [item] = await db("items")
       .insert({ name })
       .returning(ItemSelectColumns as unknown as string[]);
+    trackEvent("item_created", { itemId: item.id });
     return item;
   },
 
@@ -24,6 +26,10 @@ export const itemsService = {
   },
 
   async remove(id: string) {
-    return (await db("items").where({ id }).del()) > 0;
+    const removed = (await db("items").where({ id }).del()) > 0;
+    if (removed) {
+      trackEvent("item_deleted", { itemId: id });
+    }
+    return removed;
   },
 };

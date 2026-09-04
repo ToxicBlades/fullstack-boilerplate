@@ -1,4 +1,6 @@
 process.env.NODE_ENV = "test";
+// Keep local/hosted observability data free from test-generated events.
+process.env.LOKI_URL = "";
 process.env.AUTH_DEV_BYPASS = "false";
 process.env.DATABASE_URL ??=
   "postgresql://postgres:postgres@localhost:5432/postgres";

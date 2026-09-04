@@ -1,3 +1,6 @@
+// This entry point must load .env before importing modules with environment-based setup.
+import "dotenv/config";
+import { flushLogs } from "@project/logger";
 import { authPool } from "@/auth/auth";
 import { env } from "@/config/env";
 import { db } from "@/db/knex";
@@ -11,6 +14,7 @@ const server = app.listen(env.BACK_PORT, env.BACK_HOST, () => {
 
 const shutdown = () =>
   server.close(async () => {
+    await flushLogs();
     await db.destroy();
     await authPool.end();
     process.exit(0);
