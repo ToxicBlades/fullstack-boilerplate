@@ -1,43 +1,96 @@
-# Website
+# @project/docs
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+Docusaurus site for Project documentation and long-form technical content.
+It supports versionable MDX documentation, a blog, generated navigation, and
+syntax-highlighted code examples.
 
-## Installation
+## Features
 
-```bash
-npm install
+- Documentation pages authored in Markdown or MDX
+- Automatically generated sidebars and navigation
+- A built-in blog with RSS and Atom feeds
+- Light and dark themes with syntax highlighting
+- Static output suitable for any static hosting provider
+
+## Prerequisites
+
+- Node.js 20 or newer
+- pnpm and the repository workspace dependencies
+
+Install dependencies from the repository root:
+
+```sh
+pnpm install
 ```
 
-**Note**: feel free to use the package manager of your choice.
+## Configuration
 
-## Local Development
+The site does not currently use environment variables. Before deploying,
+replace the starter values in `docusaurus.config.ts`, including the title,
+tagline, production URL, organization and repository names, social image, and
+edit links.
 
-```bash
-npm run start
+Navigation and content behavior are configured in:
+
+- `docusaurus.config.ts` for site metadata, themes, plugins, and deployment
+- `sidebars.ts` for documentation navigation
+
+## Development
+
+Start the local development server from the repository root:
+
+```sh
+pnpm --filter @project/docs start
 ```
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+Docusaurus opens the site in a browser and reloads most content changes. Add
+documentation under `docs/`, blog posts under `blog/`, and public assets under
+`static/`.
 
-## Build
+## Build and serve
 
-```bash
-npm run build
+Create the production site and preview it locally:
+
+```sh
+pnpm --filter @project/docs build
+pnpm --filter @project/docs serve
 ```
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
+The static site is written to `apps/docs/build/`. Run the type checker before
+publishing changes:
+
+```sh
+pnpm --filter @project/docs typecheck
+```
 
 ## Deployment
 
-Using SSH:
+The `deploy` script uses Docusaurus deployment settings. Configure the real
+repository and production URL in `docusaurus.config.ts` before running it:
 
-```bash
-USE_SSH=true npm run deploy
+```sh
+pnpm --filter @project/docs deploy
 ```
 
-Not using SSH:
+For other static hosts, deploy the contents of `apps/docs/build/`.
 
-```bash
-GIT_USER=<Your GitHub username> npm run deploy
-```
+## Project structure
 
-If you are using GitHub Pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+- `docs/` - Documentation pages and categories
+- `blog/` - Blog posts, authors, and tags
+- `src/` - Site-specific React components and CSS
+- `static/` - Files copied directly into the generated site
+- `docusaurus.config.ts` - Site and theme configuration
+- `sidebars.ts` - Documentation sidebar definitions
+
+Do not edit `.docusaurus/` or `build/`; both are generated directories.
+
+## Key dependencies
+
+- Docusaurus provides the documentation, blog, routing, and build system.
+- MDX allows React components inside Markdown content.
+- Prism React Renderer provides code syntax highlighting.
+
+## License
+
+Private - Internal use only
