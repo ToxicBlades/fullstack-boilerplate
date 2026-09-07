@@ -9,7 +9,7 @@ export async function saveItem(name: string, id?: string) {
   return id
     ? itemsService.patch(id, { name }, options)
     : itemsService.create(
-        { name, id: crypto.randomUUID() } as unknown as CreateItemBody,
+        { id: crypto.randomUUID(), name } as unknown as CreateItemBody,
         options
       );
 }

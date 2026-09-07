@@ -28,22 +28,22 @@ export async function uploadDocument(
   if (!(presign.success && presign.data)) {
     return {
       data: null,
-      success: false,
-      status: presign.status,
       errorMessage: presign.errorMessage ?? "Could not prepare upload.",
+      status: presign.status,
+      success: false,
     };
   }
   const upload = await fetch(presign.data.uploadUrl, {
-    method: presign.data.method,
-    headers: presign.data.headers,
     body: await file.arrayBuffer(),
+    headers: presign.data.headers,
+    method: presign.data.method,
   });
   if (!upload.ok) {
     return {
       data: null,
-      success: false,
-      status: upload.status,
       errorMessage: "Upload failed.",
+      status: upload.status,
+      success: false,
     };
   }
   return documentsService.confirm(presign.data.documentId, options);

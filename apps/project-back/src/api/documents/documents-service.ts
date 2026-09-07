@@ -9,22 +9,45 @@ import { db } from "@/db/knex";
 
 function toDocument(row: Record<string, unknown>) {
   return {
-    id: row.id,
-    title: row.title,
-    storageKey: row.storage_key,
-    mimeType: row.mime_type,
-    sizeBytes: Number(row.size_bytes),
-    uploadedBy: row.uploaded_by,
-    uploadConfirmed: row.upload_confirmed,
     createdAt: row.created_at,
     expiresAt: row.expires_at,
     folderId: null,
+    id: row.id,
+    mimeType: row.mime_type,
+    sizeBytes: Number(row.size_bytes),
     storage: "s3" as const,
+    storageKey: row.storage_key,
+    title: row.title,
+    uploadConfirmed: row.upload_confirmed,
+    uploadedBy: row.uploaded_by,
     url: null,
   };
 }
 
 export const documentsService = {
+  async confirm(userId: string, id: string) {
+    const row = await db("documents")
+      .where({ id, uploaded_by: userId })
+      .first();
+    if (!row) {
+      return null;
+    }
+    await db("documents").where({ id }).update({ upload_confirmed: true });
+    return toDocument({ ...row, upload_confirmed: true });
+  },
+
+  async downloadUrl(userId: string, id: string) {
+    const row = await db("documents")
+      .where({ id, uploaded_by: userId })
+      .first();
+    if (!row) {
+      return null;
+    }
+    return {
+      downloadUrl: await createDownloadUrl(row.storage_key),
+      storage: "s3" as const,
+    };
+  },
   async list(userId: string) {
     const rows = await db("documents")
       .where({ uploaded_by: userId })
@@ -49,10 +72,10 @@ export const documentsService = {
     const storageKey = `${userId}/${id}-${filename}`;
     await db("documents").insert({
       id,
-      title: body.title,
-      storage_key: storageKey,
       mime_type: body.mimeType,
       size_bytes: body.sizeBytes,
+      storage_key: storageKey,
+      title: body.title,
       uploaded_by: userId,
     });
     return {
@@ -63,27 +86,6 @@ export const documentsService = {
       storageKey,
       uploadUrl: await createUploadUrl(storageKey, body.mimeType),
     };
-  },
-
-  async confirm(userId: string, id: string) {
-    const row = await db("documents")
-      .where({ id, uploaded_by: userId })
-      .first();
-    if (!row) {
-      return null;
-    }
-    await db("documents").where({ id }).update({ upload_confirmed: true });
-    return toDocument({ ...row, upload_confirmed: true });
-  },
-
-  async update(userId: string, id: string, title: string) {
-    const count = await db("documents")
-      .where({ id, uploaded_by: userId })
-      .update({ title });
-    if (!count) {
-      return null;
-    }
-    return toDocument(await db("documents").where({ id }).first());
   },
 
   async remove(userId: string, id: string) {
@@ -98,16 +100,13 @@ export const documentsService = {
     return true;
   },
 
-  async downloadUrl(userId: string, id: string) {
-    const row = await db("documents")
+  async update(userId: string, id: string, title: string) {
+    const count = await db("documents")
       .where({ id, uploaded_by: userId })
-      .first();
-    if (!row) {
+      .update({ title });
+    if (!count) {
       return null;
     }
-    return {
-      downloadUrl: await createDownloadUrl(row.storage_key),
-      storage: "s3" as const,
-    };
+    return toDocument(await db("documents").where({ id }).first());
   },
 };

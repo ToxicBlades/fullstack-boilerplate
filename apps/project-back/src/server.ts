@@ -23,7 +23,7 @@ const origins = env.CORS_ORIGINS.split(",")
   .map((origin) => origin.trim())
   .filter(Boolean);
 app.use(
-  cors({ origin: origins.length > 0 ? origins : true, credentials: true })
+  cors({ credentials: true, origin: origins.length > 0 ? origins : true })
 );
 app.use(helmet());
 app.use(
@@ -56,14 +56,14 @@ app.get("/api/auth/me", async (req, res) => {
     return;
   }
   res.json({
-    id: session.user.id,
-    email: session.user.email,
-    fullName: session.user.name,
+    aiProviderKeysSet: { openai: false },
     avatarUrl: session.user.image ?? null,
     createdAt: session.user.createdAt,
-    timezone: "UTC",
-    aiProviderKeysSet: { openai: false },
+    email: session.user.email,
+    fullName: session.user.name,
+    id: session.user.id,
     legalAcceptances: {},
+    timezone: "UTC",
   });
 });
 app.all("/api/auth/*", toNodeHandler(auth));

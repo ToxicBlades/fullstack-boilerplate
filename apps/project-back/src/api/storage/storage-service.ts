@@ -10,12 +10,12 @@ import {
 } from "@/common/storage/s3";
 
 export const storageService = {
-  isConfigured: isS3Configured,
   checkConnection: checkS3Connection,
-  list: listObjects,
-  upload: putObject,
   download: getObject,
-  remove: deleteObject,
-  presignUpload: createUploadUrl,
+  isConfigured: isS3Configured,
+  list: listObjects,
   presignDownload: createDownloadUrl,
+  presignUpload: createUploadUrl,
+  remove: deleteObject,
+  upload: putObject,
 };

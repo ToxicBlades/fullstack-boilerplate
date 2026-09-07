@@ -1,15 +1,15 @@
 "use strict";
 /** @type {import('jest').Config} */
 module.exports = {
-  preset: "ts-jest/presets/default-esm",
-  testEnvironment: "node",
   extensionsToTreatAsEsm: [".ts", ".tsx"],
-  roots: ["<rootDir>/src"],
-  testMatch: ["**/__tests__/**/*.test.ts"],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
   },
+  preset: "ts-jest/presets/default-esm",
+  roots: ["<rootDir>/src"],
   setupFiles: ["<rootDir>/src/__tests__/jest-setup.ts"],
+  testEnvironment: "node",
+  testMatch: ["**/__tests__/**/*.test.ts"],
   transform: {
     "^.+\\.tsx?$": [
       "ts-jest",

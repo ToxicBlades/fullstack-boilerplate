@@ -5,18 +5,10 @@ import type { Preview } from "@storybook/nextjs";
 import "@project/design-system/styles/globals.css";
 
 const preview: Preview = {
-  parameters: {
-    controls: {
-      matchers: {
-        color: /(background|color)$/i,
-        date: /Date$/i,
-      },
-    },
-  },
   decorators: [
     withThemeByClassName({
-      themes: { light: "light", dark: "dark" },
       defaultTheme: "light",
+      themes: { dark: "dark", light: "light" },
     }),
     (Story) => (
       <ThemeProvider
@@ -32,6 +24,14 @@ const preview: Preview = {
       </ThemeProvider>
     ),
   ],
+  parameters: {
+    controls: {
+      matchers: {
+        color: /(background|color)$/i,
+        date: /Date$/i,
+      },
+    },
+  },
 };
 
 export default preview;

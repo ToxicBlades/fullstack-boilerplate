@@ -10,7 +10,7 @@ import {
 } from "@project/design-system/components/ui/card";
 import { Input } from "@project/design-system/components/ui/input";
 import type { StandardResponse } from "@project/services/server";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
   deleteDocument,
   renameDocument,
@@ -36,43 +36,74 @@ export function DocumentsPanel({
   if (busy) {
     buttonLabel = "Saving…";
   }
-  async function save(event: React.FormEvent) {
-    event.preventDefault();
-    setBusy(true);
-    setError(null);
-    let result: StandardResponse<DocumentListItem> | null = null;
-    if (editing) {
-      result = await renameDocument(editing, title.trim());
-    } else if (file && title.trim()) {
-      result = await uploadDocument(title.trim(), file);
-    }
-    if (result?.success && result.data) {
-      const savedDocument = result.data;
-      setDocuments((current) =>
-        editing
-          ? current.map((document) =>
-              document.id === editing ? savedDocument : document
-            )
-          : [savedDocument, ...current]
-      );
-      setTitle("");
-      setFile(null);
-      setEditing(null);
-    } else if (result) {
-      setError(result.errorMessage ?? "Could not save document.");
-    }
-    setBusy(false);
-  }
-  async function remove(id: string) {
-    const result = await deleteDocument(id);
-    if (result.success) {
-      setDocuments((current) =>
-        current.filter((document) => document.id !== id)
-      );
-    } else {
-      setError(result.errorMessage ?? "Could not delete document.");
-    }
-  }
+  const save = useCallback(
+    async (event: React.FormEvent) => {
+      event.preventDefault();
+      setBusy(true);
+      setError(null);
+      let result: StandardResponse<DocumentListItem> | null = null;
+      if (editing) {
+        result = await renameDocument(editing, title.trim());
+      } else if (file && title.trim()) {
+        result = await uploadDocument(title.trim(), file);
+      }
+      if (result?.success && result.data) {
+        const savedDocument = result.data;
+        setDocuments((current) =>
+          editing
+            ? current.map((document) =>
+                document.id === editing ? savedDocument : document
+              )
+            : [savedDocument, ...current]
+        );
+        setTitle("");
+        setFile(null);
+        setEditing(null);
+      } else if (result) {
+        setError(result.errorMessage ?? "Could not save document.");
+      }
+      setBusy(false);
+    },
+    [editing, file, title]
+  );
+  const handleTitleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) =>
+      setTitle(event.target.value),
+    []
+  );
+  const handleFileChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) =>
+      setFile(event.target.files?.[0] ?? null),
+    []
+  );
+  const cancelEditing = useCallback(() => {
+    setEditing(null);
+    setTitle("");
+  }, []);
+  const editDocument = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      setEditing(event.currentTarget.dataset.id ?? null);
+      setTitle(event.currentTarget.dataset.title ?? "");
+    },
+    []
+  );
+  const removeDocument = useCallback(
+    async (event: React.MouseEvent<HTMLButtonElement>) => {
+      const { id } = event.currentTarget.dataset;
+      if (!id) {
+        return;
+      }
+      const result = await deleteDocument(id);
+      if (result.success) {
+        setDocuments((current) =>
+          current.filter((document) => document.id !== id)
+        );
+      } else {
+        setError(result.errorMessage ?? "Could not delete document.");
+      }
+    },
+    []
+  );
   return (
     <Card className="gap-0 overflow-hidden border-slate-200/80 shadow-slate-200/40 shadow-sm">
       <CardHeader className="border-slate-100 border-b bg-white pt-6 pb-5">
@@ -88,7 +119,7 @@ export function DocumentsPanel({
         >
           <Input
             aria-label="Document title"
-            onChange={(event) => setTitle(event.target.value)}
+            onChange={handleTitleChange}
             placeholder={editing ? "Document title…" : "Title"}
             required
             value={title}
@@ -96,20 +127,13 @@ export function DocumentsPanel({
           {!editing && (
             <Input
               aria-label="Document file"
-              onChange={(event) => setFile(event.target.files?.[0] ?? null)}
+              onChange={handleFileChange}
               required
               type="file"
             />
           )}
           {editing && (
-            <Button
-              onClick={() => {
-                setEditing(null);
-                setTitle("");
-              }}
-              type="button"
-              variant="ghost"
-            >
+            <Button onClick={cancelEditing} type="button" variant="ghost">
               Cancel
             </Button>
           )}
@@ -138,10 +162,9 @@ export function DocumentsPanel({
                 </div>
                 <div className="flex gap-1">
                   <Button
-                    onClick={() => {
-                      setEditing(document.id);
-                      setTitle(document.title);
-                    }}
+                    data-id={document.id}
+                    data-title={document.title}
+                    onClick={editDocument}
                     size="sm"
                     variant="ghost"
                   >
@@ -149,9 +172,8 @@ export function DocumentsPanel({
                   </Button>
                   <Button
                     className="text-red-600 hover:text-red-700"
-                    onClick={async () => {
-                      await remove(document.id);
-                    }}
+                    data-id={document.id}
+                    onClick={removeDocument}
                     size="sm"
                     variant="ghost"
                   >

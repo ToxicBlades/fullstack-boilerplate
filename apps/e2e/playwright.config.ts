@@ -6,65 +6,65 @@ const BACK_HEALTH_URL =
 const AUTH_FILE = "src/.auth/user.json";
 
 export default defineConfig({
-  testDir: "./src/tests",
-  fullyParallel: true,
-  forbidOnly: Boolean(process.env.CI),
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
-  reporter: [["list"], ["html", { open: "never" }]],
-  outputDir: "test-results",
-  timeout: 60_000,
   expect: { timeout: 10_000 },
-  use: {
-    baseURL: WEB_URL,
-    trace: "retain-on-failure",
-    screenshot: "only-on-failure",
-    video: "retain-on-failure",
-    actionTimeout: 15_000,
-  },
+  forbidOnly: Boolean(process.env.CI),
+  fullyParallel: true,
+  outputDir: "test-results",
   projects: [
     {
       name: "setup",
       testMatch: /global\.setup\.ts/,
     },
     {
+      dependencies: ["setup"],
       name: "chromium",
+      testIgnore: [/global\.setup\.ts/, /auth\.spec\.ts/, /sign-out\.spec\.ts/],
       use: {
         ...devices["Desktop Chrome"],
         storageState: AUTH_FILE,
       },
-      dependencies: ["setup"],
-      testIgnore: [/global\.setup\.ts/, /auth\.spec\.ts/, /sign-out\.spec\.ts/],
     },
     {
+      dependencies: ["chromium"],
       name: "chromium-sign-out",
+      testMatch: [/sign-out\.spec\.ts/],
       use: {
         ...devices["Desktop Chrome"],
         storageState: AUTH_FILE,
       },
-      dependencies: ["chromium"],
-      testMatch: [/sign-out\.spec\.ts/],
     },
     {
       name: "chromium-unauthenticated",
-      use: { ...devices["Desktop Chrome"] },
       testMatch: [/auth\.spec\.ts/],
+      use: { ...devices["Desktop Chrome"] },
     },
   ],
+  reporter: [["list"], ["html", { open: "never" }]],
+  retries: process.env.CI ? 2 : 0,
+  testDir: "./src/tests",
+  timeout: 60_000,
+  use: {
+    actionTimeout: 15_000,
+    baseURL: WEB_URL,
+    screenshot: "only-on-failure",
+    trace: "retain-on-failure",
+    video: "retain-on-failure",
+  },
   webServer: process.env.E2E_SKIP_WEBSERVER
     ? undefined
     : [
         {
           command: "pnpm --filter @project/back dev",
-          url: BACK_HEALTH_URL,
           reuseExistingServer: !process.env.CI,
           timeout: 120_000,
+          url: BACK_HEALTH_URL,
         },
         {
           command: "pnpm --filter @project dev",
-          url: WEB_URL,
           reuseExistingServer: !process.env.CI,
           timeout: 120_000,
+          url: WEB_URL,
         },
       ],
+  workers: process.env.CI ? 1 : undefined,
 });

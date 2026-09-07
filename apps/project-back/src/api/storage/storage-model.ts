@@ -10,8 +10,8 @@ export const ObjectKeySchema = z
   );
 
 export const PresignUploadBodySchema = z.object({
-  key: ObjectKeySchema,
   contentType: z.string().trim().min(1).optional(),
+  key: ObjectKeySchema,
 });
 
 export const ObjectKeyQuerySchema = z.object({ key: ObjectKeySchema });

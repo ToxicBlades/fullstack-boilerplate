@@ -8,7 +8,7 @@ storageRouter.post("/presign-upload", storageController.presignUpload);
 storageRouter.get("/presign-download", storageController.presignDownload);
 storageRouter.put(
   "/objects/*",
-  express.raw({ type: "*/*", limit: "25mb" }),
+  express.raw({ limit: "25mb", type: "*/*" }),
   storageController.upload
 );
 storageRouter.get("/objects/*", storageController.download);

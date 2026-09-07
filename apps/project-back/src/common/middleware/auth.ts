@@ -19,9 +19,9 @@ export const requireAuth: RequestHandler = async (req, res, next) => {
         return;
       }
       req.user = {
-        id,
         email: req.header("x-user-email") ?? "dev@local.test",
         fullName: req.header("x-user-name") ?? "Dev User",
+        id,
       };
       next();
       return;
@@ -40,9 +40,9 @@ export const requireAuth: RequestHandler = async (req, res, next) => {
       return;
     }
     const user = {
-      id: session.user.id,
       email: session.user.email,
       fullName: session.user.name,
+      id: session.user.id,
     };
     req.user = user;
     await setCachedAuthUser(req, user);

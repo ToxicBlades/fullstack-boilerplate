@@ -6,9 +6,12 @@
       "!.cursor",
       "!.agents",
       "!.vscode",
-      "!project-back/migrations",
+      "!apps/project-back/migrations",
+      "!apps/project-back/src/__tests__",
+      "!e2e",
       "!graphify-out",
-      "!libs/design-system"
+      "!libs/design-system",
+      "!**/*.svg"
     ]
   },
   "extends": ["ultracite/biome/core", "ultracite/biome/next"],

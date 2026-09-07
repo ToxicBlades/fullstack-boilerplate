@@ -3,8 +3,8 @@ import { createMetadata } from "@project/seo/metadata";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = createMetadata({
-  title: "Project",
   description: "A thoughtful studio for brands, products, and better ideas.",
+  title: "Project",
 });
 
 import { Geist, Geist_Mono } from "next/font/google";

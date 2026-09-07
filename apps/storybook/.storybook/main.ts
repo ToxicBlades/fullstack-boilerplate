@@ -19,7 +19,6 @@ const designSystemPath = resolve(
 );
 
 const config: StorybookConfig = {
-  stories: ["../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
   addons: [
     getAbsolutePath("@chromatic-com/storybook"),
     getAbsolutePath("@storybook/addon-onboarding"),
@@ -30,12 +29,13 @@ const config: StorybookConfig = {
     options: {},
   },
   staticDirs: ["../public"],
-  viteFinal: async (config) => ({
-    ...config,
+  stories: ["../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
+  viteFinal: async (viteConfig) => ({
+    ...viteConfig,
     resolve: {
-      ...config.resolve,
+      ...viteConfig.resolve,
       alias: {
-        ...(config.resolve?.alias ?? {}),
+        ...(viteConfig.resolve?.alias ?? {}),
         "@project/design-system": designSystemPath,
       },
     },

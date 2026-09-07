@@ -30,9 +30,9 @@ export async function handleResponse<T>(
   } catch {
     return {
       data: null,
+      errorMessage: "Failed to parse response JSON.",
       status: response.status,
       success: false,
-      errorMessage: "Failed to parse response JSON.",
     };
   }
 
@@ -40,16 +40,16 @@ export async function handleResponse<T>(
     const success = json.success && response.ok;
     return {
       data: (json.responseObject ?? null) as T | null,
+      errorMessage: success ? undefined : json.message,
       status: json.statusCode ?? response.status,
       success,
-      errorMessage: success ? undefined : json.message,
     };
   }
   return {
     data: json as T,
+    errorMessage: response.ok ? undefined : "Request failed",
     status: response.status,
     success: response.ok,
-    errorMessage: response.ok ? undefined : "Request failed",
   };
 }
 
@@ -57,8 +57,8 @@ export function handleError<T>(error: unknown): StandardResponse<T> {
   const err = error as { status?: number; message?: string };
   return {
     data: null,
+    errorMessage: err.message ?? "An unknown error occurred.",
     status: err.status ?? 500,
     success: false,
-    errorMessage: err.message ?? "An unknown error occurred.",
   };
 }

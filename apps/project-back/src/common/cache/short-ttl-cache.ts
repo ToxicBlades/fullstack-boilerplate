@@ -17,7 +17,7 @@ export function shortTtlCacheSet(
   value: unknown,
   ttlMs: number
 ): Promise<void> {
-  cache.set(key, { value, expiresAt: Date.now() + ttlMs });
+  cache.set(key, { expiresAt: Date.now() + ttlMs, value });
   return Promise.resolve();
 }
 export function shortTtlCacheDelete(key: string): void {

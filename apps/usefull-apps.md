@@ -22,6 +22,11 @@ setup database as tables with full role based access
 
 https://nocodb.com/docs/self-hosting
 
+# Next-intl
+internalization of next apps 
+allows both cookie and route managing locales
+https://next-intl.dev/
+
 ## Automation
 
 # N8N

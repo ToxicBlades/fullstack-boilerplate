@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "storybook dev -p 6006",
     "build": "storybook build",
     "chromatic": "chromatic --exit-zero-on-changes",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "storybook dev -p 6006",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
@@ -29,6 +29,8 @@
     "@project/typescript-config": "workspace:*",
     "@storybook/addon-onboarding": "^10.6.0",
     "@storybook/addon-themes": "^10.6.0",
+    "@storybook/nextjs-vite": "10.6.0",
+    "@tailwindcss/postcss": "^4.2.1",
     "@types/node": "^25",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
@@ -36,8 +38,6 @@
     "postcss": "^8",
     "storybook": "^10.6.0",
     "tailwindcss": "^4.2.1",
-    "@storybook/nextjs-vite": "10.6.0",
-    "@tailwindcss/postcss": "^4.2.1",
     "vite": "^7.0.0"
   }
 }

@@ -15,41 +15,38 @@ async function collectExports(
   excludePatterns: Set<string> = new Set()
 ): Promise<string[]> {
   const entries = await fs.readdir(dir, { withFileTypes: true });
-  const exports: string[] = [];
+  const nestedExports = await Promise.all(
+    entries.map((entry) => {
+      const fullPath = path.join(dir, entry.name);
 
-  for (const entry of entries) {
-    const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        // Check if this directory should be excluded based on its relative path
+        const relDirPath = path.relative(rootDir, fullPath).replace(/\\/g, "/");
+        const shouldExclude = excludePatterns.has(relDirPath);
 
-    if (entry.isDirectory()) {
-      // Check if this directory should be excluded based on its relative path
-      const relDirPath = path.relative(rootDir, fullPath).replace(/\\/g, "/");
-      const shouldExclude = excludePatterns.has(relDirPath);
+        if (!(SKIP_DIRS.has(entry.name) || shouldExclude)) {
+          return collectExports(fullPath, rootDir, excludePatterns);
+        }
+      } else if (entry.isFile()) {
+        const ext = path.extname(entry.name);
+        const name = path.basename(entry.name, ext);
 
-      if (!(SKIP_DIRS.has(entry.name) || shouldExclude)) {
-        const subExports = await collectExports(
-          fullPath,
-          rootDir,
-          excludePatterns
-        );
-        exports.push(...subExports);
+        if ((ext === ".ts" || ext === ".tsx") && name !== "index") {
+          const relPath =
+            "./" +
+            path
+              .relative(rootDir, fullPath)
+              .replace(BACKSLASH_REGEX, "/")
+              .replace(TS_EXTENSION_REGEX, "");
+          return [`export * from '${relPath}';`];
+        }
       }
-    } else if (entry.isFile()) {
-      const ext = path.extname(entry.name);
-      const name = path.basename(entry.name, ext);
 
-      if ((ext === ".ts" || ext === ".tsx") && name !== "index") {
-        const relPath =
-          "./" +
-          path
-            .relative(rootDir, fullPath)
-            .replace(BACKSLASH_REGEX, "/")
-            .replace(TS_EXTENSION_REGEX, "");
-        exports.push(`export * from '${relPath}';`);
-      }
-    }
-  }
+      return [];
+    })
+  );
 
-  return exports;
+  return nestedExports.flat();
 }
 
 /**
@@ -72,24 +69,22 @@ async function generateCustomIndex(
     excludeDirs.map((pattern) => pattern.replace(/\\/g, "/"))
   );
 
-  for (const dir of includeDirs) {
-    const folderPath = path.join(rootDir, dir);
-    try {
-      const exportsArr = await collectExports(
-        folderPath,
-        rootDir,
-        excludePatternsSet
-      );
-      allExports.push(...exportsArr);
-      // biome-ignore lint/suspicious/noExplicitAny: <its an error>
-    } catch (err: any) {
-      if (err.code === "ENOENT") {
-        console.warn(`Skipped missing folder: ${dir}`);
-      } else {
+  const exportsByDirectory = await Promise.all(
+    includeDirs.map(async (dir) => {
+      const folderPath = path.join(rootDir, dir);
+      try {
+        return await collectExports(folderPath, rootDir, excludePatternsSet);
+        // biome-ignore lint/suspicious/noExplicitAny: <its an error>
+      } catch (err: any) {
+        if (err.code === "ENOENT") {
+          console.warn(`Skipped missing folder: ${dir}`);
+          return [];
+        }
         throw err;
       }
-    }
-  }
+    })
+  );
+  allExports.push(...exportsByDirectory.flat());
 
   const contentLines = [...allExports, ...extraExports];
 
@@ -110,13 +105,13 @@ async function main(): Promise<void> {
 
   const targets: TargetConfig[] = [
     {
-      targetFile: "index.ts",
       includeDirs: [
         "src/types",
         "src/static",
         "src/api-routes",
         "src/zod-validators",
       ],
+      targetFile: "index.ts",
     },
     // # use client.ts when somecode which is client only appears
     // {
@@ -124,15 +119,16 @@ async function main(): Promise<void> {
     //   includeDirs: ["src/static"],
     // },
     {
-      targetFile: "server.ts",
-      includeDirs: ["src/services"],
       excludeDirs: ["src/services/common"],
+      extraExports: ['export * from "./src/services/common/response.service";'],
+      includeDirs: ["src/services"],
+      targetFile: "server.ts",
     },
   ];
 
-  for (const target of targets) {
-    await generateCustomIndex(rootDir, target);
-  }
+  await Promise.all(
+    targets.map((target) => generateCustomIndex(rootDir, target))
+  );
 }
 
 main().catch((err) => {

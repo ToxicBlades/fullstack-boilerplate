@@ -15,19 +15,19 @@ function getTransporter(): nodemailer.Transporter | null {
     return transporter;
   }
   const smtpConfig: SMTPTransport.Options = {
-    host: envEmail.SMTP_HOST,
-    port: envEmail.SMTP_PORT,
-    secure: envEmail.SMTP_SECURE,
-    connectionTimeout: 10_000,
-    greetingTimeout: 10_000,
-    socketTimeout: 15_000,
     auth:
       envEmail.SMTP_USER && envEmail.SMTP_PASS
         ? {
-            user: envEmail.SMTP_USER,
             pass: envEmail.SMTP_PASS,
+            user: envEmail.SMTP_USER,
           }
         : undefined,
+    connectionTimeout: 10_000,
+    greetingTimeout: 10_000,
+    host: envEmail.SMTP_HOST,
+    port: envEmail.SMTP_PORT,
+    secure: envEmail.SMTP_SECURE,
+    socketTimeout: 15_000,
   };
 
   transporter = nodemailer.createTransport(smtpConfig);
@@ -41,7 +41,7 @@ export async function sendTransactionalEmail(
   if (!mailer) {
     if (envEmail.isDevelopment || envEmail.isTest) {
       logger.info(
-        { to: input.to, subject: input.subject, text: input.text },
+        { subject: input.subject, text: input.text, to: input.to },
         "SMTP_HOST unset — email logged instead of sent (set localhost:1025 for Mailpit)"
       );
       return;
@@ -50,16 +50,16 @@ export async function sendTransactionalEmail(
   }
 
   const send = mailer.sendMail({
-    from: envEmail.SMTP_FROM,
-    to: input.to,
-    subject: input.subject,
-    text: input.text,
-    html: input.html,
     attachments: input.attachments?.map((attachment) => ({
-      filename: attachment.filename,
       content: attachment.content,
       contentType: attachment.contentType,
+      filename: attachment.filename,
     })),
+    from: envEmail.SMTP_FROM,
+    html: input.html,
+    subject: input.subject,
+    text: input.text,
+    to: input.to,
   });
 
   await Promise.race([
@@ -72,7 +72,7 @@ export async function sendTransactionalEmail(
   ]);
 
   logger.info(
-    { to: input.to, subject: input.subject },
+    { subject: input.subject, to: input.to },
     "transactional email sent"
   );
 }

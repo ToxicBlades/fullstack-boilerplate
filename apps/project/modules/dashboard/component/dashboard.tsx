@@ -2,7 +2,7 @@
 
 import { Button } from "@project/design-system/components/ui/button";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { signOut } from "../../auth/actions/auth";
 import { DocumentsPanel } from "../../documents/component/documents-panel";
 import { ItemsPanel } from "../../items/component/items-panel";
@@ -17,19 +17,25 @@ export function Dashboard({
   const [view, setView] = useState<View>("items");
   const router = useRouter();
   const firstName = useMemo(
-    () => user.fullName?.split(" ")[0] || user.email,
+    () => user.fullName.split(" ")[0] || user.email,
     [user]
   );
-  async function handleSignOut() {
+  const handleSignOut = useCallback(async () => {
     await signOut();
     router.replace("/auth");
-  }
+  }, [router]);
+  const handleViewChange = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      setView(event.currentTarget.dataset.view as View);
+    },
+    []
+  );
 
   const navigation = [
-    { label: "Items", count: initialItems.length, value: "items" as const },
+    { count: initialItems.length, label: "Items", value: "items" as const },
     {
-      label: "Documents",
       count: initialDocuments.length,
+      label: "Documents",
       value: "documents" as const,
     },
   ];
@@ -107,8 +113,9 @@ export function Dashboard({
                     ? "bg-slate-950 text-white shadow-sm"
                     : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
                 }`}
+                data-view={entry.value}
                 key={entry.value}
-                onClick={() => setView(entry.value)}
+                onClick={handleViewChange}
                 type="button"
               >
                 {entry.label}

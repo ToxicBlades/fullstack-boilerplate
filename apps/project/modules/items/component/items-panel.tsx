@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@project/design-system/components/ui/card";
 import { Input } from "@project/design-system/components/ui/input";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { deleteItem, saveItem } from "../actions/items";
 import type { Item } from "../types/item";
 
@@ -19,35 +19,57 @@ export function ItemsPanel({ initialItems }: { initialItems: Item[] }) {
   const [editing, setEditing] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  async function save(event: React.FormEvent) {
-    event.preventDefault();
-    if (!name.trim()) {
-      return;
-    }
-    setBusy(true);
-    const result = await saveItem(name.trim(), editing ?? undefined);
-    if (result.success && result.data) {
-      const savedItem = result.data;
-      setItems((current) =>
-        editing
-          ? current.map((item) => (item.id === editing ? savedItem : item))
-          : [savedItem, ...current]
-      );
-      setName("");
-      setEditing(null);
-    } else {
-      setError(result.errorMessage ?? "Could not save item.");
-    }
-    setBusy(false);
-  }
-  async function remove(id: string) {
-    const result = await deleteItem(id);
-    if (result.success) {
-      setItems((current) => current.filter((item) => item.id !== id));
-    } else {
-      setError(result.errorMessage ?? "Could not delete item.");
-    }
-  }
+  const save = useCallback(
+    async (event: React.FormEvent) => {
+      event.preventDefault();
+      if (!name.trim()) {
+        return;
+      }
+      setBusy(true);
+      const result = await saveItem(name.trim(), editing ?? undefined);
+      if (result.success && result.data) {
+        const savedItem = result.data;
+        setItems((current) =>
+          editing
+            ? current.map((item) => (item.id === editing ? savedItem : item))
+            : [savedItem, ...current]
+        );
+        setName("");
+        setEditing(null);
+      } else {
+        setError(result.errorMessage ?? "Could not save item.");
+      }
+      setBusy(false);
+    },
+    [editing, name]
+  );
+  const handleNameChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => setName(event.target.value),
+    []
+  );
+  const cancelEditing = useCallback(() => {
+    setEditing(null);
+    setName("");
+  }, []);
+  const editItem = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
+    setEditing(event.currentTarget.dataset.id ?? null);
+    setName(event.currentTarget.dataset.name ?? "");
+  }, []);
+  const removeItem = useCallback(
+    async (event: React.MouseEvent<HTMLButtonElement>) => {
+      const { id } = event.currentTarget.dataset;
+      if (!id) {
+        return;
+      }
+      const result = await deleteItem(id);
+      if (result.success) {
+        setItems((current) => current.filter((item) => item.id !== id));
+      } else {
+        setError(result.errorMessage ?? "Could not delete item.");
+      }
+    },
+    []
+  );
   return (
     <Card className="gap-0 overflow-hidden border-slate-200/80 shadow-slate-200/40 shadow-sm">
       <CardHeader className="border-slate-100 border-b bg-white pt-6 pb-5">
@@ -60,20 +82,13 @@ export function ItemsPanel({ initialItems }: { initialItems: Item[] }) {
         <form className="flex flex-col gap-2 sm:flex-row" onSubmit={save}>
           <Input
             aria-label="Item name"
-            onChange={(event) => setName(event.target.value)}
+            onChange={handleNameChange}
             placeholder={editing ? "Rename item…" : "Add an item…"}
             value={name}
           />
           <Button disabled={busy}>{editing ? "Save" : "Add"}</Button>
           {editing && (
-            <Button
-              onClick={() => {
-                setEditing(null);
-                setName("");
-              }}
-              type="button"
-              variant="ghost"
-            >
+            <Button onClick={cancelEditing} type="button" variant="ghost">
               Cancel
             </Button>
           )}
@@ -95,10 +110,9 @@ export function ItemsPanel({ initialItems }: { initialItems: Item[] }) {
                 </span>
                 <div className="flex gap-1">
                   <Button
-                    onClick={() => {
-                      setEditing(item.id);
-                      setName(item.name);
-                    }}
+                    data-id={item.id}
+                    data-name={item.name}
+                    onClick={editItem}
                     size="sm"
                     variant="ghost"
                   >
@@ -106,9 +120,8 @@ export function ItemsPanel({ initialItems }: { initialItems: Item[] }) {
                   </Button>
                   <Button
                     className="text-red-600 hover:text-red-700"
-                    onClick={async () => {
-                      await remove(item.id);
-                    }}
+                    data-id={item.id}
+                    onClick={removeItem}
                     size="sm"
                     variant="ghost"
                   >

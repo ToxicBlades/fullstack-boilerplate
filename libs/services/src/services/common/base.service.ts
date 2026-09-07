@@ -57,11 +57,11 @@ abstract class BaseService {
     try {
       const response = await fetch(joinApiUrl(path, options?.baseUrl), {
         ...options?.init,
-        method,
-        headers: this.getHeaders(hasBody, options),
+        body: hasBody ? JSON.stringify(options.body) : undefined,
         credentials:
           options?.init?.credentials ?? (options?.token ? "omit" : "include"),
-        body: hasBody ? JSON.stringify(options.body) : undefined,
+        headers: this.getHeaders(hasBody, options),
+        method,
       });
       return await handleResponse<T>(response);
     } catch (error: unknown) {
@@ -80,11 +80,11 @@ abstract class BaseService {
     }
     return fetch(joinApiUrl(path, options?.baseUrl), {
       ...options?.init,
-      method,
-      headers,
+      body: options?.body ?? undefined,
       credentials:
         options?.init?.credentials ?? (options?.token ? "omit" : "include"),
-      body: options?.body ?? undefined,
+      headers,
+      method,
     });
   }
 }

@@ -3,24 +3,10 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { ArrowRight, Plus, Search } from "lucide-react";
 
 const meta = {
-  title: "UI/Button",
-  component: Button,
-  parameters: {
-    layout: "centered",
+  args: {
+    children: "Button",
   },
-  tags: ["autodocs"],
   argTypes: {
-    variant: {
-      control: "select",
-      options: [
-        "default",
-        "destructive",
-        "outline",
-        "secondary",
-        "ghost",
-        "link",
-      ],
-    },
     size: {
       control: "select",
       options: [
@@ -34,10 +20,24 @@ const meta = {
         "icon-lg",
       ],
     },
+    variant: {
+      control: "select",
+      options: [
+        "default",
+        "destructive",
+        "outline",
+        "secondary",
+        "ghost",
+        "link",
+      ],
+    },
   },
-  args: {
-    children: "Button",
+  component: Button,
+  parameters: {
+    layout: "centered",
   },
+  tags: ["autodocs"],
+  title: "UI/Button",
 } satisfies Meta<typeof Button>;
 
 export default meta;

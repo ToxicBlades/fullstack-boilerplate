@@ -5,32 +5,32 @@ import { env } from "@/config/env";
 
 export const authPool = new Pool({ connectionString: env.DATABASE_URL });
 export const auth = betterAuth({
-  secret: env.BETTER_AUTH_SECRET,
+  advanced: {
+    database: { generateId: () => randomUUID() },
+    disableCSRFCheck: true,
+    disableOriginCheck: true,
+  },
   baseURL: env.BETTER_AUTH_URL,
   database: authPool,
+  emailAndPassword: { enabled: true, requireEmailVerification: true },
+  emailVerification: {
+    autoSignInAfterVerification: false,
+    sendOnSignUp: false,
+  },
+  secret: env.BETTER_AUTH_SECRET,
   session: {
     cookieCache: {
       enabled: true,
       maxAge: env.AUTH_SESSION_COOKIE_CACHE_MAX_AGE_SEC,
     },
   },
-  emailAndPassword: { enabled: true, requireEmailVerification: true },
-  emailVerification: {
-    sendOnSignUp: false,
-    autoSignInAfterVerification: false,
-  },
   user: {
-    modelName: "users",
     fields: {
-      name: "full_name",
-      emailVerified: "email_verified",
       createdAt: "created_at",
+      emailVerified: "email_verified",
+      name: "full_name",
       updatedAt: "updated_at",
     },
-  },
-  advanced: {
-    database: { generateId: () => randomUUID() },
-    disableOriginCheck: true,
-    disableCSRFCheck: true,
+    modelName: "users",
   },
 });

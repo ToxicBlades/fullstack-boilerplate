@@ -4,18 +4,18 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "build": "tsup",
-    "start": "NODE_ENV=production node dist/index.mjs",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --watchman=false --no-cache",
-    "db:migrate": "tsx src/db/migrate-latest.ts",
-    "db:setup": "pnpm db:migrate && pnpm auth:migrate",
     "auth:migrate": "npx @better-auth/cli@latest migrate --config ./src/auth/auth-migrate.ts",
-    "db:rollback": "knex migrate:rollback --knexfile knexfile.ts",
+    "build": "tsup",
     "db:make": "knex migrate:make --knexfile knexfile.ts",
+    "db:migrate": "tsx src/db/migrate-latest.ts",
+    "db:reset-schema": "ALLOW_DB_NUKE=1 tsx src/db/reset-schema.ts",
+    "db:rollback": "knex migrate:rollback --knexfile knexfile.ts",
     "db:seed": "tsx src/db/seed-cli.ts",
     "db:seed:reset": "tsx src/db/seed-cli.ts --reset",
-    "db:reset-schema": "ALLOW_DB_NUKE=1 tsx src/db/reset-schema.ts"
+    "db:setup": "pnpm db:migrate && pnpm auth:migrate",
+    "dev": "tsx watch src/index.ts",
+    "start": "NODE_ENV=production node dist/index.mjs",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --watchman=false --no-cache"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.787.0",

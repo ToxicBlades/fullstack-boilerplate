@@ -3,12 +3,6 @@ import { db } from "@/db/knex";
 import { ItemSelectColumns } from "./items-model";
 
 export const itemsService = {
-  list() {
-    return db("items")
-      .select(...ItemSelectColumns)
-      .orderBy("created_at", "desc");
-  },
-
   async create(name: string) {
     const [item] = await db("items")
       .insert({ name })
@@ -16,13 +10,10 @@ export const itemsService = {
     trackEvent("item_created", { itemId: item.id });
     return item;
   },
-
-  async update(id: string, name: string) {
-    const [item] = await db("items")
-      .where({ id })
-      .update({ name, updated_at: db.fn.now() })
-      .returning(ItemSelectColumns as unknown as string[]);
-    return item ?? null;
+  list() {
+    return db("items")
+      .select(...ItemSelectColumns)
+      .orderBy("created_at", "desc");
   },
 
   async remove(id: string) {
@@ -31,5 +22,13 @@ export const itemsService = {
       trackEvent("item_deleted", { itemId: id });
     }
     return removed;
+  },
+
+  async update(id: string, name: string) {
+    const [item] = await db("items")
+      .where({ id })
+      .update({ name, updated_at: db.fn.now() })
+      .returning(ItemSelectColumns as unknown as string[]);
+    return item ?? null;
   },
 };

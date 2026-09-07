@@ -12,8 +12,7 @@ const applicationName = "Project";
 const publisher = "Project";
 const twitterHandle = "@project";
 const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
-// if project has 2 or more landings use here env value
-const productionUrl = "your domain here";
+const productionUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
 const author: Metadata["authors"] = {
   name: "Project",
@@ -28,30 +27,30 @@ export const createMetadata = ({
 }: MetadataGenerator): Metadata => {
   const parsedTitle = `${title} | ${applicationName}`;
   const defaultMetadata: Metadata = {
-    title: parsedTitle,
-    description,
-    applicationName,
-    metadataBase: productionUrl
-      ? new URL(`${protocol}://${productionUrl}`)
-      : undefined,
-    authors: [author],
-    creator: author.name,
-    formatDetection: {
-      telephone: false,
-    },
     appleWebApp: {
       capable: true,
       statusBarStyle: "default",
       title: parsedTitle,
     },
+    applicationName,
+    authors: [author],
+    creator: author.name,
+    description,
+    formatDetection: {
+      telephone: false,
+    },
+    metadataBase: productionUrl
+      ? new URL(`${protocol}://${productionUrl}`)
+      : undefined,
     openGraph: {
-      title: parsedTitle,
       description,
-      type: "website",
-      siteName: applicationName,
       locale: "en_US",
+      siteName: applicationName,
+      title: parsedTitle,
+      type: "website",
     },
     publisher,
+    title: parsedTitle,
     twitter: {
       card: "summary_large_image",
       creator: twitterHandle,
@@ -63,10 +62,10 @@ export const createMetadata = ({
   if (image && metadata.openGraph) {
     metadata.openGraph.images = [
       {
+        alt: title,
+        height: 630,
         url: image,
         width: 1200,
-        height: 630,
-        alt: title,
       },
     ];
   }

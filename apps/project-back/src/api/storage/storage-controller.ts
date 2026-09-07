@@ -3,7 +3,7 @@ import { ObjectKeyQuerySchema, PresignUploadBodySchema } from "./storage-model";
 import { storageService } from "./storage-service";
 
 function wildcardKey(req: Request): string {
-  return String((req.params as Record<string, string>)["0"] ?? "");
+  return String((req.params as Record<string, string>)["0"]);
 }
 
 class StorageController {
@@ -55,8 +55,8 @@ class StorageController {
         return;
       }
       res.json({
-        key: query.data.key,
         downloadUrl: await storageService.presignDownload(query.data.key),
+        key: query.data.key,
       });
     } catch (error) {
       next(error);

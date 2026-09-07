@@ -6,7 +6,6 @@ import { env } from "@/config/env";
 export const db = knex({
   client: "pg",
   connection: env.DATABASE_URL,
-  pool: { min: 0, max: 10 },
   migrations: {
     directory: path.resolve(
       path.dirname(fileURLToPath(import.meta.url)),
@@ -14,4 +13,5 @@ export const db = knex({
     ),
     tableName: "project_back_knex_migrations",
   },
+  pool: { max: 10, min: 0 },
 });

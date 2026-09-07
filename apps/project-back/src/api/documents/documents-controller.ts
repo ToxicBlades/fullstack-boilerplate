@@ -17,6 +17,46 @@ export const documentsController: Record<
   "list" | "presign" | "confirm" | "update" | "remove" | "downloadUrl",
   RequestHandler
 > = {
+  confirm: (async (req, res, next) => {
+    try {
+      const params = DocumentIdSchema.safeParse(req.params);
+      if (!params.success) {
+        res.sendStatus(400);
+        return;
+      }
+      const document = await documentsService.confirm(
+        userId(req),
+        params.data.id
+      );
+      if (!document) {
+        res.sendStatus(404);
+        return;
+      }
+      res.json(document);
+    } catch (error) {
+      next(error);
+    }
+  }) satisfies RequestHandler,
+  downloadUrl: (async (req, res, next) => {
+    try {
+      const params = DocumentIdSchema.safeParse(req.params);
+      if (!params.success) {
+        res.sendStatus(400);
+        return;
+      }
+      const result = await documentsService.downloadUrl(
+        userId(req),
+        params.data.id
+      );
+      if (!result) {
+        res.sendStatus(404);
+        return;
+      }
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  }) satisfies RequestHandler,
   list: (async (req, res, next) => {
     try {
       res.json(await documentsService.list(userId(req)));
@@ -36,22 +76,16 @@ export const documentsController: Record<
       next(error);
     }
   }) satisfies RequestHandler,
-  confirm: (async (req, res, next) => {
+  remove: (async (req, res, next) => {
     try {
       const params = DocumentIdSchema.safeParse(req.params);
       if (!params.success) {
         res.sendStatus(400);
         return;
       }
-      const document = await documentsService.confirm(
-        userId(req),
-        params.data.id
+      res.sendStatus(
+        (await documentsService.remove(userId(req), params.data.id)) ? 204 : 404
       );
-      if (!document) {
-        res.sendStatus(404);
-        return;
-      }
-      res.json(document);
     } catch (error) {
       next(error);
     }
@@ -74,40 +108,6 @@ export const documentsController: Record<
         return;
       }
       res.json(document);
-    } catch (error) {
-      next(error);
-    }
-  }) satisfies RequestHandler,
-  remove: (async (req, res, next) => {
-    try {
-      const params = DocumentIdSchema.safeParse(req.params);
-      if (!params.success) {
-        res.sendStatus(400);
-        return;
-      }
-      res.sendStatus(
-        (await documentsService.remove(userId(req), params.data.id)) ? 204 : 404
-      );
-    } catch (error) {
-      next(error);
-    }
-  }) satisfies RequestHandler,
-  downloadUrl: (async (req, res, next) => {
-    try {
-      const params = DocumentIdSchema.safeParse(req.params);
-      if (!params.success) {
-        res.sendStatus(400);
-        return;
-      }
-      const result = await documentsService.downloadUrl(
-        userId(req),
-        params.data.id
-      );
-      if (!result) {
-        res.sendStatus(404);
-        return;
-      }
-      res.json(result);
     } catch (error) {
       next(error);
     }

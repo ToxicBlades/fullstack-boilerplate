@@ -22,11 +22,11 @@ export function getS3Client(): S3Client {
     throw new Error("S3 is not configured");
   }
   return new S3Client({
-    region: env.AWS_REGION,
     credentials: {
       accessKeyId: env.AWS_ACCESS_KEY_ID,
       secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
     },
+    region: env.AWS_REGION,
     ...(env.S3_ENDPOINT
       ? { endpoint: env.S3_ENDPOINT, forcePathStyle: true }
       : {}),
@@ -50,10 +50,10 @@ export async function listObjects(prefix = "") {
     new ListObjectsV2Command({ Bucket: env.S3_BUCKET, Prefix: prefix })
   );
   return (output.Contents ?? []).map((object) => ({
-    key: object.Key,
-    size: object.Size ?? 0,
-    lastModified: object.LastModified,
     etag: object.ETag,
+    key: object.Key,
+    lastModified: object.LastModified,
+    size: object.Size ?? 0,
   }));
 }
 
@@ -67,10 +67,10 @@ export async function putObject(
   }
   await getS3Client().send(
     new PutObjectCommand({
-      Bucket: env.S3_BUCKET,
-      Key: assertValidKey(key),
       Body: body,
+      Bucket: env.S3_BUCKET,
       ContentType: contentType,
+      Key: assertValidKey(key),
     })
   );
 }

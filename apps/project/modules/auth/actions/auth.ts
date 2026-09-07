@@ -28,17 +28,17 @@ function applyCookies(
 
 export async function signIn(email: string, password: string) {
   const response = await fetch(`${apiBase}/auth/sign-in/email`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
+    headers: { "Content-Type": "application/json" },
+    method: "POST",
   });
   const result = await response.json().catch(() => null);
   if (!response.ok) {
     return {
       data: null,
-      success: false,
-      status: response.status,
       errorMessage: result?.message ?? "Unable to sign in.",
+      status: response.status,
+      success: false,
     };
   }
   const setCookies = response.headers.getSetCookie?.() ?? [];
@@ -54,8 +54,8 @@ export async function signIn(email: string, password: string) {
 
 export async function signOut() {
   const response = await fetch(`${apiBase}/auth/sign-out`, {
-    method: "POST",
     headers: (await sessionOptions()).init.headers,
+    method: "POST",
   });
   applyCookies(response.headers.getSetCookie?.() ?? [], await cookies());
 }

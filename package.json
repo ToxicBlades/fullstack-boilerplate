@@ -1,31 +1,31 @@
 {
   "name": "@project/source",
   "version": "0.0.0",
-  "license": "MIT",
-  "scripts": {
-    "e2e": "pnpm --filter @project/e2e test",
-    "e2e:ui": "pnpm --filter @project/e2e test:ui",
-    "e2e:install": "pnpm --filter @project/e2e install:browsers",
-    "lint": "ultracite fix",
-    "lint:fix": "ultracite fix --unsafe",
-    "check": "ultracite check",
-    "fix": "ultracite fix",
-    "node_modules:clear": "sh scripts/clear-modules.sh",
-    "setup": "sh scripts/setup.sh",
-    "doctor": "npx react-doctor@latest",
-    "docker:rustfs:init": "sh scripts/local-init-rustfs.sh"
-  },
   "private": true,
-  "devDependencies": {
-    "@biomejs/biome": "2.4.9",
-    "react-doctor": "^0.4.2",
-    "ultracite": "7.4.2"
-  },
+  "license": "MIT",
   "workspaces": [
     "apps/*",
     "libs/*"
   ],
+  "scripts": {
+    "check": "ultracite check",
+    "docker:rustfs:init": "sh scripts/local-init-rustfs.sh",
+    "doctor": "npx react-doctor@latest",
+    "e2e": "pnpm --filter @project/e2e test",
+    "e2e:install": "pnpm --filter @project/e2e install:browsers",
+    "e2e:ui": "pnpm --filter @project/e2e test:ui",
+    "fix": "ultracite fix",
+    "lint": "ultracite fix",
+    "lint:fix": "ultracite fix --unsafe",
+    "node_modules:clear": "sh scripts/clear-modules.sh",
+    "setup": "sh scripts/setup.sh"
+  },
   "dependencies": {
     "typescript": "^6.0.2"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.12",
+    "react-doctor": "^0.4.2",
+    "ultracite": "7.11.0"
   }
 }
