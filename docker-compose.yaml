@@ -43,7 +43,7 @@ services:
     profiles: ["migrate"]
     build:
       context: .
-      dockerfile: ./apps/back/Dockerfile
+      dockerfile: ./apps/project-back/Dockerfile
       target: migrator
     image: back-migrate
     depends_on:

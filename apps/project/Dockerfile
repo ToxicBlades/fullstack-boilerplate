@@ -9,27 +9,23 @@ WORKDIR /workspace
 
 FROM base AS deps
 
-# Keep dependency installation cacheable while still exposing the relevant
-# workspace packages to pnpm.
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY apps/landing/package.json apps/landing/package.json
+COPY apps/project/package.json apps/project/package.json
 COPY libs/design-system/package.json libs/design-system/package.json
-COPY libs/seo/package.json libs/seo/package.json
 COPY libs/services/package.json libs/services/package.json
 COPY libs/typescript-config/package.json libs/typescript-config/package.json
 
-RUN pnpm install --frozen-lockfile --filter @project/landing...
+RUN pnpm install --frozen-lockfile --filter @project...
 
 FROM deps AS builder
 
 COPY tsconfig.json ./tsconfig.json
-COPY apps/landing apps/landing
+COPY apps/project apps/project
 COPY libs/design-system libs/design-system
-COPY libs/seo libs/seo
 COPY libs/services libs/services
 COPY libs/typescript-config libs/typescript-config
 
-RUN pnpm --filter @project/landing build
+RUN pnpm --filter @project build
 
 FROM node:24-alpine AS runner
 
@@ -39,12 +35,12 @@ ENV PORT=3000
 
 WORKDIR /app
 
-COPY --from=builder --chown=node:node /workspace/apps/landing/.next/standalone ./
-COPY --from=builder --chown=node:node /workspace/apps/landing/.next/static ./apps/landing/.next/static
-COPY --from=builder --chown=node:node /workspace/apps/landing/public ./apps/landing/public
+COPY --from=builder --chown=node:node /workspace/apps/project/.next/standalone ./
+COPY --from=builder --chown=node:node /workspace/apps/project/.next/static ./apps/project/.next/static
+COPY --from=builder --chown=node:node /workspace/apps/project/public ./apps/project/public
 
 USER node
 
 EXPOSE 3000
 
-CMD ["node", "apps/landing/server.js"]
+CMD ["node", "apps/project/server.js"]

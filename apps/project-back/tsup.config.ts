@@ -4,8 +4,17 @@ export default defineConfig([
   {
     clean: true,
     entry: ["src/index.ts"],
-    external: ["better-auth", "knex", "pg"],
+    external: [
+      "@prometheus-io/client",
+      "better-auth",
+      "envalid",
+      "knex",
+      "pg",
+      "pino",
+      "pino-pretty",
+    ],
     format: ["esm"],
+    noExternal: ["@project/analytics", "@project/logger"],
     platform: "node",
     sourcemap: true,
     splitting: false,
